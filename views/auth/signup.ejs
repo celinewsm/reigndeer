@@ -1,0 +1,41 @@
+
+<div class="container">
+    <div class="row" style="margin-top: 25%">
+      <h3>Sign up</h3>
+    </div>
+    <form action="/auth/signup" method="POST">
+      <div class="row">
+        <div class="six columns">
+          <label for="newUserName">Name</label>
+          <input class="u-full-width" type="text" name="name" placeholder="How do we address you?" id="newUserName">
+        </div>
+        <div class="six columns">
+          <label for="newUserEmail">Email</label>
+          <input class="u-full-width" type="email" name="email" placeholder="ruldoph@northpole.com" id="newUserEmail">
+        </div>
+      </div>
+      <div class="row">
+        <div class="six columns">
+          <label for="newUserMobile">Mobile number</label>
+          <input class="u-full-width" type="number" name="mobile" placeholder="Only incase of emergency" id="newUserMobile">
+        </div>
+        <div class="six columns">
+          <label for="newUserPassword">Password</label>
+          <input class="u-full-width" type="password" name="password" placeholder="Choose wisely! [min 8 characters]" id="newUserPassword">
+        </div>
+      </div>
+
+      <div class="row">
+          <label for="newUserType">Reason for joining</label>
+          <select class="u-full-width" name="type" id="newUserType">
+            <option value="client">I want to send stuff!</option>
+            <option value="courier">I want to be a REIGNdeer!</option>
+          </select>
+      </div>
+
+      <input class="button-primary" type="submit" value="Submit">
+    </form>
+    <a href="/auth/login"><button type="button">I have an account</button></a>
+
+  </div>
+</div>
