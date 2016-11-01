@@ -57,6 +57,10 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 34);
 	
+	var _ClientManage = __webpack_require__(/*! ./ClientManage.jsx */ 172);
+	
+	var _ClientManage2 = _interopRequireDefault(_ClientManage);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21971,6 +21975,498 @@
 	
 	module.exports = ReactDOMNullInputValuePropHook;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 3)))
+
+/***/ },
+/* 172 */
+/*!*******************************************!*\
+  !*** ./react/components/ClientManage.jsx ***!
+  \*******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 34);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ClientManage = function (_React$Component) {
+	  _inherits(ClientManage, _React$Component);
+	
+	  function ClientManage() {
+	    _classCallCheck(this, ClientManage);
+	
+	    return _possibleConstructorReturn(this, (ClientManage.__proto__ || Object.getPrototypeOf(ClientManage)).apply(this, arguments));
+	  }
+	
+	  _createClass(ClientManage, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'container' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row text-align-center' },
+	          _react2.default.createElement(
+	            'h1',
+	            null,
+	            'manage.ejs'
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row', style: { "border": "1px solid black",
+	              "padding": "1em",
+	              "margin-bottom": "1.5em" } },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'one-half column text-align-center' },
+	              _react2.default.createElement(
+	                'h5',
+	                null,
+	                'JobID:123 | Status:Pending'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'one-half column text-align-center' },
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button', name: 'button' },
+	                'Edit'
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button', name: 'button' },
+	                'Cancel'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement('div', { className: 'row' }),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'six columns' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'h5',
+	                  null,
+	                  'Pickup'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Name'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'nameHere'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Contact'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'contacteHere'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Address'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'This should be a proper address, ',
+	                  _react2.default.createElement('br', null),
+	                  'Singapore + PostalCode'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Date & Time'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    '2016-12-01 08:00'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'six columns' },
+	              _react2.default.createElement(
+	                'h5',
+	                null,
+	                'Dropoff'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Name'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'nameHere'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Contact'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'contacteHere'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Address'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'This should be a proper address too, ',
+	                  _react2.default.createElement('br', null),
+	                  'Singapore + PostalCode'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Date & Time'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    '2016-12-01 08:00'
+	                  )
+	                )
+	              )
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row', style: { "border": "1px solid black",
+	              "padding": "1em",
+	              "margin-bottom": "1.5em" } },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'one-half column text-align-center' },
+	              _react2.default.createElement(
+	                'h5',
+	                null,
+	                'JobID:123 | Status:Pending'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'one-half column text-align-center' },
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button', name: 'button' },
+	                'Edit'
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button', name: 'button' },
+	                'Cancel'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement('div', { className: 'row' }),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'six columns' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'h5',
+	                  null,
+	                  'Pickup'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Name'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'nameHere'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Contact'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'contacteHere'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Address'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'This should be a proper address, ',
+	                  _react2.default.createElement('br', null),
+	                  'Singapore + PostalCode'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Date & Time'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    '2016-12-01 08:00'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'six columns' },
+	              _react2.default.createElement(
+	                'h5',
+	                null,
+	                'Dropoff'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Name'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'nameHere'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Contact'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'contacteHere'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Address'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  'This should be a proper address too, ',
+	                  _react2.default.createElement('br', null),
+	                  'Singapore + PostalCode'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'row' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'three columns' },
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    'Date & Time'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'nine columns' },
+	                  _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    '2016-12-01 08:00'
+	                  )
+	                )
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ClientManage;
+	}(_react2.default.Component);
+	
+	if (document.getElementById('clientManage') !== null) {
+	  (0, _reactDom.render)(_react2.default.createElement(ClientManage, null), document.getElementById('clientManage'));
+	}
 
 /***/ }
 /******/ ]);

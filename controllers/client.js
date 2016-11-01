@@ -11,7 +11,13 @@ router.get('/', function (req, res) {
 })
 
 router.get('/manage', function (req, res) {
-  res.render('client/manage')
+  db.job.findAll({
+    where: { clientId: req.user.id }
+  }).then(function(jobs) {
+    console.log(jobs);
+    // users will be an array of all User instances
+    res.render('client/manage',{jobsCreatedByUser: jobs})
+  });
 })
 
 router.post('/job/new', function(req, res) {
