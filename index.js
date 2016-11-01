@@ -7,8 +7,15 @@ var app = express()
 var session = require('express-session')
 var passport = require('./config/ppConfig')
 var isLoggedIn = require('./middleware/isLoggedIn')
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+
 // var userType = require('./middleware/userType')
 
+var port = process.env.PORT || 3000;
+server.listen(port, function () {
+  console.log('Server listening at port %d', port);
+});
 
 app.set('view engine', 'ejs')
 app.use(require('morgan')('dev'))
@@ -50,10 +57,46 @@ app.get('/', isLoggedIn, function (req, res) {
 })
 
 
-// app.get('/', isLoggedIn, function (req, res) {
-//   res.redirect('/user/')
-// })
 
-var server = app.listen(process.env.PORT || 3000)
+// var connections = []
+//
+// function findConnection (id) {
+//   return connections.filter(function (c) { return c.id === id })[0]
+// }
 
-module.exports = server
+
+io.on('connection', function (socket) {
+  // socket.join('Lobby')
+  console.log("connected")
+
+  socket.on('disconnect', function () {
+    console.log("disconnected")
+  });
+
+  socket.on('client updates job', function(updatedJob){
+    console.log("client updates job socket")
+    console.log("updatedJob>>>>>",updatedJob)
+    db.job.update({
+      pickupContactNumber: updatedJob.pickupContactNumber,
+      pickupContactName: updatedJob.pickupContactName,
+      dropoffContactNumber: updatedJob.dropoffContactNumber,
+      dropoffContactName: updatedJob.dropoffContactName,
+    }, {
+      where: {
+        id: updatedJob.id
+      }
+    }).then(function(job) {
+      console.log("newly updated job",job)
+      // socket.broadcast.to(updatedJob.id).emit('update courier on job update', job);
+    });
+  });
+
+
+
+});
+
+
+
+
+
+// module.exports = server

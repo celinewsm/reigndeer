@@ -2,26 +2,29 @@ console.log("main.js connected")
 
 window.onload = function(){
 
+if($("#newJobPickupTimeDate").flatpickr){
+  document.getElementById("newJobPickupTimeDate").flatpickr({
+    minDate: new Date(), // "today" / "2016-12-20" / 1477673788975
+    maxDate: new Date(new Date().getTime()+(10*24*60*60*1000)), // this is for 10 days
+    enableTime: true,
 
-document.getElementById("newJobPickupTimeDate").flatpickr({
-  minDate: new Date(), // "today" / "2016-12-20" / 1477673788975
-  maxDate: new Date(new Date().getTime()+(10*24*60*60*1000)), // this is for 10 days
-  enableTime: true,
+    // create an extra input solely for display purposes
+    altInput: true,
+    altFormat: "F j, Y h:i K"
+  });
+}
 
-  // create an extra input solely for display purposes
-  altInput: true,
-  altFormat: "F j, Y h:i K"
-});
+if($("#newJobDropoffTimeDate").flatpickr){
+  document.getElementById("newJobDropoffTimeDate").flatpickr({
+    minDate: new Date(), // "today" / "2016-12-20" / 1477673788975
+    maxDate: new Date(new Date().getTime()+(10*24*60*60*1000)), // this is for 10 days
+    enableTime: true,
 
-document.getElementById("newJobDropoffTimeDate").flatpickr({
-  minDate: new Date(), // "today" / "2016-12-20" / 1477673788975
-  maxDate: new Date(new Date().getTime()+(10*24*60*60*1000)), // this is for 10 days
-  enableTime: true,
-
-  // create an extra input solely for display purposes
-  altInput: true,
-  altFormat: "F j, Y h:i K"
-});
+    // create an extra input solely for display purposes
+    altInput: true,
+    altFormat: "F j, Y h:i K"
+  });
+}
 
 
 $("#newJobPickupPostalCode").keyup(function(){
@@ -30,10 +33,15 @@ $("#newJobPickupPostalCode").keyup(function(){
     $("#pickupPostalcodeValidation").empty()
     $("#pickupPostalcodeValidation").append('<span class="validation-green">OK</span>')
     $.get("http://maps.googleapis.com/maps/api/geocode/json?address="+postalcode, function(data, status){
+      if(data.status == "ZERO_RESULTS"){
+        $("#pickupPostalcodeValidation").empty()
+        $("#pickupPostalcodeValidation").append('<span class="validation-red">Please enter valid postal code</span>')
+      } else {
         $("#newJobPickupLatitude").val(data.results[0].geometry.location.lat)
         $("#newJobPickupLongitude").val(data.results[0].geometry.location.lng)
         console.log($("#newJobPickupLatitude").val(), $("#newJobPickupLongitude").val())
         updatePrice()
+      }
     })
   } else {
     $("#pickupPostalcodeValidation").empty()
@@ -47,11 +55,15 @@ $("#newJobDropoffPostalCode").keyup(function(){
     $("#dropoffPostalcodeValidation").empty()
     $("#dropoffPostalcodeValidation").append('<span class="validation-green">OK</span>')
     $.get("http://maps.googleapis.com/maps/api/geocode/json?address="+postalcode, function(data, status){
-      console.log(data)
+      if(data.status == "ZERO_RESULTS"){
+        $("#dropoffPostalcodeValidation").empty()
+        $("#dropoffPostalcodeValidation").append('<span class="validation-red">Please enter valid postal code</span>')
+      } else {
         $("#newJobDropoffLatitude").val(data.results[0].geometry.location.lat)
         $("#newJobDropoffLongitude").val(data.results[0].geometry.location.lng)
         console.log($("#newJobDropoffLatitude").val(), $("#newJobDropoffLongitude").val())
         updatePrice()
+      }
     })
   } else {
     $("#dropoffPostalcodeValidation").empty()

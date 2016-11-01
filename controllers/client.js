@@ -12,20 +12,19 @@ router.get('/', function (req, res) {
 
 router.get('/manage', function (req, res) {
   db.job.findAll({
-    where: { clientId: req.user.id }
+    where: { clientId: req.user.id },
+    order: 'id DESC'
   }).then(function(jobs) {
-    console.log(jobs);
     // users will be an array of all User instances
     res.render('client/manage',{jobsCreatedByUser: jobs})
   });
 })
 
 router.post('/job/new', function(req, res) {
-  console.log("does it enter the route?")
   db.job.create({
     clientId: req.user.id,
     courierId: null, // to be assigned later
-    status: "pending", // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
+    status: "Pending", // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
     itemType: req.body.itemType,
     itemDescription: req.body.itemDescription,
     pickupLatitude: req.body.pickupLatitude,
@@ -48,8 +47,7 @@ router.post('/job/new', function(req, res) {
     courierCurrentLongitude: null,
     price: req.body.price
   }).then(function(data) {
-    console.log("does it create new object:",data)
-    res.render('client/manage')
+    res.redirect('/client/manage')
   // you can now access the newly created task via the variable data
 });
 

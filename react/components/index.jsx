@@ -1,7 +1,12 @@
 import React from 'react';
 import {render} from 'react-dom';
 
+import io from 'socket.io-client'
+let socket = io(window.location.host)
+
+
 import ClientManage from './ClientManage.jsx';
+
 
 
 class App extends React.Component {

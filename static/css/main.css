@@ -23,3 +23,7 @@ input #newJobPickupTimeDate {
 .display-none {
   display: none
 }
+
+.text-align-right {
+  text-align: right;  
+}
