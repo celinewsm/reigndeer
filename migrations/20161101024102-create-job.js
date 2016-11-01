@@ -77,6 +77,9 @@ module.exports = {
       courierCurrentLongitude: {
         type: Sequelize.DECIMAL(12,9)
       },
+      price: {
+        type: Sequelize.FLOAT
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -1,0 +1,120 @@
+<div class="container">
+    <div class="row" style="margin-top: 15%">
+      <h3>Pick up request</h3>
+    </div>
+    <form action="/client/job/new" method="POST">
+      <div class="row">
+        <h5>Pick up</h5>
+      </div>
+      <div class="row">
+        <div class="six columns">
+          <label for="newJobPickupAddress">Address</label>
+          <input class="u-full-width" type="text" name="pickupAddress" placeholder="Where do we pick up from?" id="newJobPickupAddress">
+        </div>
+        <div class="six columns">
+          <label for="newJobPickupPostalCode">Postal Code <span id="pickupPostalcodeValidation"></span></label>
+          <input class="u-full-width" type="number" name="pickupPostalCode" placeholder="eg. 123456" id="newJobPickupPostalCode" />
+          <input class="u-full-width" type="hidden" name="pickupLatitude" id="newJobPickupLatitude" />
+          <input class="u-full-width" type="hidden" name="pickupLongitude" id="newJobPickupLongitude" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="six columns">
+          <label for="newJobPickupContactName">Sender Name</label>
+          <input class="u-full-width" type="text" name="pickupContactName" placeholder="Who do we look for?" id="newJobPickupContactName" <%- "value="+ currentUser.name %> >
+        </div>
+        <div class="six columns">
+          <label for="newJobPickupContactNumber">Contact</label>
+          <input class="u-full-width" type="number" name="pickupContactNumber" placeholder="Where do we call?" id="newJobPickupContactNumber" <%- "value="+ currentUser.mobile %>>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="six columns">
+          <label for="pickupTimeDate">Pickup Date & Time</label>
+          <input type="text" id="newJobPickupTimeDate" class="u-full-width" name="pickupTimeDate" placeholder="select date & time" style="width:100%;" />
+        </div>
+
+        <!-- <div class="six columns">
+          <label for="noOfPackagesToBeSent">Drop off points</label>
+          <select class="u-full-width" id="noOfPackagesToBeSent">
+            <option selected value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+          </select>
+        </div> -->
+
+      </div>
+
+      <div id="dropoffForms">
+
+        <div class="row" style="margin-top: 2%">
+          <h5>Drop off</h5>
+        </div>
+        <div class="row">
+          <div class="six columns">
+            <label for="newJobDropoffAddress">Address</label>
+            <input class="u-full-width" type="text" name="dropoffAddress" placeholder="Where do we send this" id="newJobDropoffAddress">
+          </div>
+          <div class="six columns">
+            <label for="newJobDropoffPostalCode">Postal Code <span id="dropoffPostalcodeValidation"></span></label>
+            <input class="u-full-width" type="number" name="dropoffPostalCode" placeholder="eg. 123456" id="newJobDropoffPostalCode" />
+            <input class="u-full-width" type="hidden" name="dropoffLatitude" id="newJobDropoffLatitude" />
+            <input class="u-full-width" type="hidden" name="dropoffLongitude" id="newJobDropoffLongitude" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="six columns">
+            <label for="newJobDropoffContactName">Sender Name</label>
+            <input class="u-full-width" type="text" name="dropoffContactName" placeholder="Who do we look for?" id="newJobDropoffContactName" >
+          </div>
+          <div class="six columns">
+            <label for="newJobDropoffContactNumber">Contact</label>
+            <input class="u-full-width" type="number" name="dropoffContactNumber" placeholder="Where do we call?" id="newJobDropoffContactNumber">
+          </div>
+        </div>
+        <div class="row">
+            <label for="dropoffTimeDate">Dropoff Date & Time</label>
+            <input type="text" id="newJobDropoffTimeDate" class="u-full-width" name="dropoffTimeDate" placeholder="select date & time" />
+        </div>
+
+      </div>
+
+
+
+
+      <div class="row" style="margin-top: 2%">
+        <h5>Details</h5>
+      </div>
+      <div class="row">
+        <div class="twelve columns">
+          <label for="newJobItemType">Item size and type</label>
+          <select class="u-full-width" name="itemType" id="newJobItemType">
+            <option value="1">Document (up to 297 x 420 x 10 mm, 200g)</option>
+            <option value="2">Small (up to 300 x 300 x 100 mm, 500g)</option>
+            <option value="3">Medium (up to 450 x 450 x 200 mm, 1.5kg)</option>
+            <option value="4">Large (up to 750 x 750 x 500 mm, 3kg)</option>
+            <option value="5">Odd Sized</option>
+          </select>
+        </div>
+      </div>
+      <label for="newJobNotes">Notes</label>
+      <textarea class="u-full-width" name="notes" placeholder="Special instructions… (if any)" id="itemDescription"></textarea>
+
+      <div class="row">
+        <div class="twelve columns">
+          <label for="newJobPrice">Price</label>
+          <input type="text" readonly="readonly" id="newJobPrice" class="u-full-width" name="price" placeholder="Fill up form to get price" />
+        </div>
+      </div>
+
+
+      <input class="button-primary" type="submit" value="Submit">
+    </form>
+    <a href="/auth/login"><button type="button">I have an account</button></a>
+
+  </div>

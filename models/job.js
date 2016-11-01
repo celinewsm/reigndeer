@@ -23,7 +23,8 @@ module.exports = function(sequelize, DataTypes) {
     dropoffContactName: DataTypes.STRING,
     dropoffContactNumber: DataTypes.INTEGER,
     courierCurrentLatitude: DataTypes.DECIMAL(12,9),
-    courierCurrentLongitude: DataTypes.DECIMAL(12,9)
+    courierCurrentLongitude: DataTypes.DECIMAL(12,9),
+    price: DataTypes.FLOAT
   }, {
     classMethods: {
       associate: function(models) {
