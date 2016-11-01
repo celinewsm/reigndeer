@@ -1,6 +1,16 @@
 console.log("main.js connected")
 
+let socket = io()
+
+
 window.onload = function(){
+
+  if(currentUser !== undefined){
+    console.log("user found", currentUser)
+    socket.emit('client join channels', currentUser.id);
+  } else {
+    console.log("user not found")
+  }
 
 if($("#newJobPickupTimeDate").flatpickr){
   document.getElementById("newJobPickupTimeDate").flatpickr({

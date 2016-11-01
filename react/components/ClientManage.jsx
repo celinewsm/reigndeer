@@ -36,7 +36,7 @@ var ClientManage = React.createClass({
       }
     }
  },
- deleteJob: function(jobId){
+ cancelJob: function(jobId){
   for ( var i = 0 ; i < this.state.jobs.length ; i++ ){
     if (this.state.jobs[i].id === jobId){
       var jobs = this.state.jobs
@@ -56,7 +56,7 @@ var ClientManage = React.createClass({
         </div>
         {
           this.state.jobs.map(function(job) {
-            return <Job key={job.id} job={job} updateJob={this.updateJob} deleteJob={this.deleteJob} />
+            return <Job key={job.id} job={job} updateJob={this.updateJob} cancelJob={this.cancelJob} />
           }.bind(this))
         }
       </div>
@@ -133,7 +133,7 @@ render: function(){
             </div>
             <div className="five columns text-align-right">
               <button type="button" name="button" onClick={() => this.toggleEdit()} >Edit</button>
-              <button type="button" name="button" onClick={() => this.props.deleteJob(this.state.id)} >Cancel</button>
+              <button type="button" name="button" onClick={() => this.props.cancelJob(this.state.id)} >Cancel</button>
             </div>
           </div>
           <div className="row">

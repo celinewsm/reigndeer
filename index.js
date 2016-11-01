@@ -103,6 +103,43 @@ io.on('connection', function (socket) {
       // socket.broadcast.to(updatedJob.id).emit('update courier on job update', job);
     });
   });
+
+
+  socket.on('client join channels', function(userId){
+    db.job.findAll({
+      where: {
+        clientId: userId,
+        $not: {status: 'Cancelled'},
+       },
+    }).then(function(jobs) {
+      // users will be an array of all User instances
+      for (var i = 0 ; i < jobs.length ; i++){
+        console.log("joining room")
+        socket.join(jobs[i].id)
+      }
+    });
+  });
+
+  // app.use(function(req,res,next){
+  //   if (req.user){
+  //     db.job.findAll({
+  //       where: {
+  //         clientId: userId,
+  //         $not: {status: 'Cancelled'},
+  //        },
+  //     }).then(function(jobs) {
+  //       // users will be an array of all User instances
+  //       for (var i = 0 ; i < jobs.length ; i++){
+  //         console.log("joining room")
+  //         socket.join(jobs[i].id)
+  //       }
+  //     });
+  //   }
+  //   next()
+  // })
+
+
+
 });
 
 

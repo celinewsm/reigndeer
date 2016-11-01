@@ -22033,7 +22033,7 @@
 	      }
 	    }
 	  },
-	  deleteJob: function deleteJob(jobId) {
+	  cancelJob: function cancelJob(jobId) {
 	    for (var i = 0; i < this.state.jobs.length; i++) {
 	      if (this.state.jobs[i].id === jobId) {
 	        var jobs = this.state.jobs;
@@ -22059,7 +22059,7 @@
 	        )
 	      ),
 	      this.state.jobs.map(function (job) {
-	        return _react2.default.createElement(Job, { key: job.id, job: job, updateJob: this.updateJob, deleteJob: this.deleteJob });
+	        return _react2.default.createElement(Job, { key: job.id, job: job, updateJob: this.updateJob, cancelJob: this.cancelJob });
 	      }.bind(this))
 	    );
 	  }
@@ -22161,7 +22161,7 @@
 	            _react2.default.createElement(
 	              'button',
 	              { type: 'button', name: 'button', onClick: function onClick() {
-	                  return _this.props.deleteJob(_this.state.id);
+	                  return _this.props.cancelJob(_this.state.id);
 	                } },
 	              'Cancel'
 	            )
