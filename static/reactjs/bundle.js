@@ -22041,6 +22041,7 @@
 	        this.setState({
 	          jobs: jobs
 	        });
+	        socket.emit('client cancels job', jobId);
 	      }
 	    }
 	  },

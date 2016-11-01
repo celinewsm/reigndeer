@@ -44,7 +44,7 @@ var ClientManage = React.createClass({
       this.setState({
         jobs: jobs
       })
-
+      socket.emit('client cancels job', jobId);
     }
   }
 },

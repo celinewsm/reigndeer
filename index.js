@@ -91,8 +91,18 @@ io.on('connection', function (socket) {
     });
   });
 
-
-
+  socket.on('client cancels job', function(jobId){
+    db.job.update({
+      status: "Cancelled"
+    }, {
+      where: {
+        id: jobId
+      }
+    }).then(function(job) {
+      console.log("newly updated job",job)
+      // socket.broadcast.to(updatedJob.id).emit('update courier on job update', job);
+    });
+  });
 });
 
 

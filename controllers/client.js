@@ -12,7 +12,10 @@ router.get('/', function (req, res) {
 
 router.get('/manage', function (req, res) {
   db.job.findAll({
-    where: { clientId: req.user.id },
+    where: {
+      clientId: req.user.id,
+      $not: {status: 'Cancelled'},
+     },
     order: 'id DESC'
   }).then(function(jobs) {
     // users will be an array of all User instances
