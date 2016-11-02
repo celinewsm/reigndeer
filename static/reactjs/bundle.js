@@ -69,9 +69,9 @@
 	
 	var _CourierJobsListing2 = _interopRequireDefault(_CourierJobsListing);
 	
-	var _CourierManage = __webpack_require__(/*! ./CourierManage.jsx */ 222);
+	var _CourierManageJobs = __webpack_require__(/*! ./CourierManageJobs.jsx */ 224);
 	
-	var _CourierManage2 = _interopRequireDefault(_CourierManage);
+	var _CourierManageJobs2 = _interopRequireDefault(_CourierManageJobs);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -30335,15 +30335,7 @@
 
 
 /***/ },
-/* 222 */
-/*!********************************************!*\
-  !*** ./react/components/CourierManage.jsx ***!
-  \********************************************/
-/***/ function(module, exports) {
-
-	"use strict";
-
-/***/ },
+/* 222 */,
 /* 223 */
 /*!*************************************************!*\
   !*** ./react/components/CourierJobsListing.jsx ***!
@@ -30392,8 +30384,24 @@
 	    this.setState({ jobs: this.state.initialJobs });
 	  },
 	  componentDidMount: function componentDidMount() {
+	
+	    // might only need it on manage page
 	    socket.emit('courier join channels', currentUserCourier.id);
 	    this.getUserLocation();
+	    socket.on('update courier on job update', this.clientUpdatesJob);
+	  },
+	  clientUpdatesJob: function clientUpdatesJob(job) {
+	    console.log("does it reach here?", job);
+	
+	    for (var i in this.state.jobs) {
+	      if (this.state.jobs[i].id === job.id) {
+	        var newJobs = this.state.jobs;
+	        newJobs[i] = job, this.setState({
+	          jobs: newJobs
+	        });
+	        break;
+	      }
+	    }
 	  },
 	  getUserLocation: function getUserLocation() {
 	    console.log("execute getUserLocation");
@@ -30452,8 +30460,6 @@
 	  },
 	  buttonToShow: function buttonToShow() {
 	    var _this = this;
-	
-	    console.log("does it reach buttonToShow?");
 	
 	    if (!this.state.nearMeTriggered) {
 	      if (this.state.userCurrentLatitude !== undefined) {
@@ -30517,7 +30523,7 @@
 	    return this.props.job;
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    this.setState(nextProps);
+	    this.setState(nextProps.job);
 	  },
 	  clientRating: function clientRating() {
 	    if (this.state.clientDetails.rating) {
@@ -30754,6 +30760,15 @@
 	if (document.getElementById('courierJobsListing') !== null) {
 	  (0, _reactDom.render)(_react2.default.createElement(CourierJobsListing, null), document.getElementById('courierJobsListing'));
 	}
+
+/***/ },
+/* 224 */
+/*!************************************************!*\
+  !*** ./react/components/CourierManageJobs.jsx ***!
+  \************************************************/
+/***/ function(module, exports) {
+
+	"use strict";
 
 /***/ }
 /******/ ]);

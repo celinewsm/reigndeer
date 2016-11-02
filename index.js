@@ -57,14 +57,6 @@ app.get('/', isLoggedIn, function (req, res) {
 })
 
 
-
-// var connections = []
-//
-// function findConnection (id) {
-//   return connections.filter(function (c) { return c.id === id })[0]
-// }
-
-
 io.on('connection', function (socket) {
   // socket.join('Lobby')
   console.log("connected")
@@ -83,9 +75,19 @@ io.on('connection', function (socket) {
       where: {
         id: updatedJob.id
       }
-    }).then(function(job) {
-      console.log("newly updated job",job)
-      // socket.broadcast.to(updatedJob.id).emit('update courier on job update', job);
+    }).then(function() {
+      db.job.find({
+        where: {
+          id: updatedJob.id
+         },
+        include: [{
+          model: db.user,
+          as: 'courierDetails',
+          attributes: ['name', 'mobile', 'rating','jobQty']
+        }]
+      }).then(function(job) {
+        socket.broadcast.emit('update courier on job update', job);
+      });
     });
   });
 
@@ -154,19 +156,10 @@ io.on('connection', function (socket) {
           attributes: ['name', 'mobile', 'rating','jobQty']
         }]
       }).then(function(job) {
-
         socket.broadcast.to(data.jobId).emit('courier accepted client job', job);
-
       });
-
-
     });
-
   })
-
-
-
-
 });
 
 

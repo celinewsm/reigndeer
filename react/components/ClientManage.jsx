@@ -34,8 +34,6 @@ var ClientManage = React.createClass({
          break
        }
      }
-
-
   },
   clientUpdateJob: function(jobId,updatedJob){
 
@@ -143,6 +141,7 @@ saveState: function(){
   }
   this.setState(updatedJob);
   this.props.clientUpdateJob(this.state.id,updatedJob)
+
 },
 acceptedByCourier: function(){
   if (this.state.courierDetails !== null){

@@ -29,8 +29,27 @@ var CourierJobsListing = React.createClass({
     this.setState({jobs: this.state.initialJobs})
   },
   componentDidMount: function(){
+
+    // might only need it on manage page
     socket.emit('courier join channels', currentUserCourier.id);
     this.getUserLocation()
+    socket.on('update courier on job update', this.clientUpdatesJob);
+
+  },
+  clientUpdatesJob: function(job){
+    console.log("does it reach here?",job)
+
+    for(var i in this.state.jobs){
+       if(this.state.jobs[i].id === job.id){
+         var newJobs = this.state.jobs
+         newJobs[i] = job,
+
+         this.setState({
+           jobs: newJobs
+         })
+         break
+       }
+     }
   },
   getUserLocation: function(){
     console.log("execute getUserLocation")
@@ -93,8 +112,6 @@ filterByNearby: function(){
 
 },
 buttonToShow: function(){
-  console.log("does it reach buttonToShow?")
-
   if(!this.state.nearMeTriggered){
     if(this.state.userCurrentLatitude !== undefined){
       return <div><button onClick={() => this.filterByNearby() }>Near Me</button></div>
@@ -132,7 +149,7 @@ var Job = React.createClass({
     return this.props.job
   },
   componentWillReceiveProps: function(nextProps) {
-    this.setState(nextProps);
+    this.setState(nextProps.job);
 },
 clientRating: function(){
   if (this.state.clientDetails.rating){

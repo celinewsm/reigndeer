@@ -20,10 +20,33 @@ router.get('/', function (req, res) {
     }]
   }).then(function(jobs) {
     // users will be an array of all User instances
-    console.log("LOOK HERE>>>>>", jobs)
-    console.log("LOOK HERE jobs[0].clientDetails>>>>>", jobs[0].clientDetails)
     res.render('courier/index',{jobsAvailable: jobs})
   });
 })
+
+
+router.get('/manage', function (req, res) {
+  db.job.findAll({
+    where: {
+      courierId: req.user.id,
+      $not: {status: 'Cancelled'},
+      $not: {status: 'Completed'},
+     },
+    order: 'id DESC',
+    include: [{
+      model: db.user,
+      as: 'clientDetails',
+      attributes: ['name', 'mobile', 'rating','jobQty']
+    },{
+      model: db.itemCategory,
+      as: 'itemCategory',
+      attributes: ['name']
+    }]
+  }).then(function(jobs) {
+    // users will be an array of all User instances
+    res.render('courier/manage',{jobsAccepted: jobs})
+  });
+})
+
 
 module.exports = router
