@@ -65,6 +65,10 @@
 	
 	var _ClientManage2 = _interopRequireDefault(_ClientManage);
 	
+	var _CourierManage = __webpack_require__(/*! ./CourierManage.jsx */ 222);
+	
+	var _CourierManage2 = _interopRequireDefault(_CourierManage);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30284,6 +30288,15 @@
 	};
 	
 
+
+/***/ },
+/* 222 */
+/*!********************************************!*\
+  !*** ./react/components/CourierManage.jsx ***!
+  \********************************************/
+/***/ function(module, exports) {
+
+	"use strict";
 
 /***/ }
 /******/ ]);
