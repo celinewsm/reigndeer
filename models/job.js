@@ -29,6 +29,8 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
+        models.job.belongsTo(models.user, {as: 'courierDetails', foreignKey: 'courierId' })
+        models.job.belongsTo(models.user, {as: 'clientDetails', foreignKey: 'clientId' })
       }
     }
   });

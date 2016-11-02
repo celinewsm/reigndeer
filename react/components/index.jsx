@@ -6,6 +6,7 @@ let socket = io(window.location.host)
 
 
 import ClientManage from './ClientManage.jsx';
+import CourierJobsListing from './CourierJobsListing.jsx';
 import CourierManage from './CourierManage.jsx';
 
 

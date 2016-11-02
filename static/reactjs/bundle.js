@@ -65,6 +65,10 @@
 	
 	var _ClientManage2 = _interopRequireDefault(_ClientManage);
 	
+	var _CourierJobsListing = __webpack_require__(/*! ./CourierJobsListing.jsx */ 223);
+	
+	var _CourierJobsListing2 = _interopRequireDefault(_CourierJobsListing);
+	
 	var _CourierManage = __webpack_require__(/*! ./CourierManage.jsx */ 222);
 	
 	var _CourierManage2 = _interopRequireDefault(_CourierManage);
@@ -30297,6 +30301,363 @@
 /***/ function(module, exports) {
 
 	"use strict";
+
+/***/ },
+/* 223 */
+/*!*************************************************!*\
+  !*** ./react/components/CourierJobsListing.jsx ***!
+  \*************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 34);
+	
+	var _socket = __webpack_require__(/*! socket.io-client */ 173);
+	
+	var _socket2 = _interopRequireDefault(_socket);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var socket = (0, _socket2.default)(window.location.host);
+	
+	var CourierJobsListing = _react2.default.createClass({
+	  displayName: 'CourierJobsListing',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      initialJobs: jobsAvailable,
+	      jobs: []
+	    };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    this.setState({ jobs: this.state.initialJobs });
+	  },
+	  componentDidMount: function componentDidMount() {
+	    socket.emit('courier join channels', currentUserCourier.id);
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'container' },
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'row text-align-center' },
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Jobs Available'
+	        )
+	      ),
+	      this.state.jobs.map(function (job) {
+	        return _react2.default.createElement(Job, { key: job.id, job: job });
+	      }.bind(this))
+	    );
+	  }
+	});
+	
+	var Job = _react2.default.createClass({
+	  displayName: 'Job',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      id: this.props.job.id,
+	      clientId: this.props.job.clientId,
+	      courierId: this.props.job.courierId, // to be assigned later
+	      status: this.props.job.status, // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
+	      itemType: this.props.job.itemType,
+	      itemDescription: this.props.job.itemDescription,
+	      pickupLatitude: this.props.job.pickupLatitude,
+	      pickupLongitude: this.props.job.pickupLongitude,
+	      pickupTimeDate: this.props.job.pickupTimeDate,
+	      pickupAddress: this.props.job.pickupAddress,
+	      pickupPostalCode: this.props.job.pickupPostalCode,
+	      pickupCountryId: this.props.job.pickupCountryId, // assign first
+	      pickupContactName: this.props.job.pickupContactName,
+	      pickupContactNumber: this.props.job.pickupContactNumber,
+	      dropoffLatitude: this.props.job.dropoffLatitude,
+	      dropoffLongitude: this.props.job.dropoffLongitude,
+	      dropoffTimeDate: this.props.job.dropoffTimeDate,
+	      dropoffAddress: this.props.job.dropoffAddress,
+	      dropoffPostalCode: this.props.job.dropoffPostalCode,
+	      dropoffCountryId: this.props.job.dropoffCountryId, // assign first
+	      dropoffContactName: this.props.job.dropoffContactName,
+	      dropoffContactNumber: this.props.job.dropoffContactNumber,
+	      courierCurrentLatitude: this.props.job.courierCurrentLatitude, // to be updated when not assigned && not completed
+	      courierCurrentLongitude: this.props.job.courierCurrentLongitude,
+	      price: this.props.job.price
+	    };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    this.setState(nextProps);
+	  },
+	  render: function render() {
+	    var _this = this;
+	
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'row', style: { "border": "1px solid black",
+	          "padding": "1em",
+	          "marginBottom": "1.5em" } },
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'row' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'five columns offset-by-one' },
+	          _react2.default.createElement(
+	            'h5',
+	            null,
+	            'JobID: 1300',
+	            this.state.id
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'five columns' },
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'button', name: 'button', onClick: function onClick() {
+	                return _this.acceptJob();
+	              } },
+	            'Accept'
+	          )
+	        )
+	      ),
+	      _react2.default.createElement('div', { className: 'row' }),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'row' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'five columns offset-by-one' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'h5',
+	              null,
+	              'Pickup'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Name'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.pickupContactName
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Contact'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.pickupContactNumber
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Address'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.pickupAddress,
+	              ', ',
+	              _react2.default.createElement('br', null),
+	              'Singapore ',
+	              this.state.pickupPostalCode
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Date'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.pickupTimeDate.slice(0, 10)
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Time'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                this.state.pickupTimeDate.slice(11, 16)
+	              )
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'five columns' },
+	          _react2.default.createElement(
+	            'h5',
+	            null,
+	            'Dropoff'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Name'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.dropoffContactName
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Contact'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.dropoffContactNumber
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Address'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.dropoffAddress,
+	              ', ',
+	              _react2.default.createElement('br', null),
+	              'Singapore ',
+	              this.state.dropoffPostalCode
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Date'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.dropoffTimeDate.slice(0, 10)
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Time'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                this.state.dropoffTimeDate.slice(11, 16)
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	if (document.getElementById('courierJobsListing') !== null) {
+	  (0, _reactDom.render)(_react2.default.createElement(CourierJobsListing, null), document.getElementById('courierJobsListing'));
+	}
 
 /***/ }
 /******/ ]);
