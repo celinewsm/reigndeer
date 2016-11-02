@@ -31,6 +31,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
         models.job.belongsTo(models.user, {as: 'courierDetails', foreignKey: 'courierId' })
         models.job.belongsTo(models.user, {as: 'clientDetails', foreignKey: 'clientId' })
+        models.job.belongsTo(models.itemCategory, {as: 'itemCategory', foreignKey: 'itemType' })
       }
     }
   });

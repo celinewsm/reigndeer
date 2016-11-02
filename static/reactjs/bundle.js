@@ -30393,6 +30393,101 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    socket.emit('courier join channels', currentUserCourier.id);
+	    this.getUserLocation();
+	  },
+	  getUserLocation: function getUserLocation() {
+	    console.log("execute getUserLocation");
+	    if (!navigator.geolocation) {
+	      console.log("geolocation not supported");
+	      return;
+	    }
+	    var obj = this;
+	    function success(position) {
+	      var latitude = position.coords.latitude;
+	      var longitude = position.coords.longitude;
+	      console.log('Latitude is ' + latitude + '° Longitude is ' + longitude + '°');
+	
+	      obj.setState({ userCurrentLatitude: latitude,
+	        userCurrentLongitude: longitude });
+	      // console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&zoom=13&size=300x300&sensor=false")
+	    };
+	    function error() {
+	      console.log("Unable to retrieve your location");
+	    };
+	
+	    navigator.geolocation.getCurrentPosition(success, error);
+	  },
+	  filterByNearby: function filterByNearby() {
+	    var obj = this;
+	    // distance between pick up point and distance between user less than 10 km
+	    var filteredJobs = this.state.jobs.filter(function (job) {
+	      return calcCrow(job.pickupLatitude, job.pickupLongitude, obj.state.userCurrentLatitude, obj.state.userCurrentLongitude) < 5;
+	    });
+	
+	    console.log(filteredJobs);
+	    this.setState({
+	      oldJobs: this.state.jobs,
+	      jobs: filteredJobs,
+	      nearMeTriggered: true
+	    });
+	
+	    //This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
+	    function calcCrow(lat1, lon1, lat2, lon2) {
+	      var R = 6371; // km
+	      var dLat = toRad(lat2 - lat1);
+	      var dLon = toRad(lon2 - lon1);
+	      var lat1 = toRad(lat1);
+	      var lat2 = toRad(lat2);
+	
+	      var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+	      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	      var d = R * c;
+	      return d;
+	    }
+	
+	    // Converts numeric degrees to radians
+	    function toRad(Value) {
+	      return Value * Math.PI / 180;
+	    }
+	  },
+	  buttonToShow: function buttonToShow() {
+	    var _this = this;
+	
+	    console.log("does it reach buttonToShow?");
+	
+	    if (!this.state.nearMeTriggered) {
+	      if (this.state.userCurrentLatitude !== undefined) {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: function onClick() {
+	                return _this.filterByNearby();
+	              } },
+	            'Near Me'
+	          )
+	        );
+	      }
+	    } else {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: function onClick() {
+	              return _this.previousQuery();
+	            } },
+	          'View All'
+	        )
+	      );
+	    }
+	  },
+	  previousQuery: function previousQuery() {
+	    this.setState({
+	      jobs: this.state.oldJobs,
+	      nearMeTriggered: false
+	    });
 	  },
 	  render: function render() {
 	    return _react2.default.createElement(
@@ -30406,15 +30501,7 @@
 	          { className: 'zero-margins' },
 	          'Jobs Available'
 	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          _react2.default.createElement(
-	            'button',
-	            null,
-	            'Near Me'
-	          )
-	        )
+	        this.buttonToShow()
 	      ),
 	      this.state.jobs.map(function (job) {
 	        return _react2.default.createElement(Job, { key: job.id, job: job, acceptJob: this.acceptJob });
@@ -30427,34 +30514,7 @@
 	  displayName: 'Job',
 	
 	  getInitialState: function getInitialState() {
-	    return {
-	      id: this.props.job.id,
-	      clientId: this.props.job.clientId,
-	      clientDetails: this.props.job.clientDetails,
-	      courierId: this.props.job.courierId, // to be assigned later
-	      status: this.props.job.status, // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
-	      itemType: this.props.job.itemType,
-	      itemDescription: this.props.job.itemDescription,
-	      pickupLatitude: this.props.job.pickupLatitude,
-	      pickupLongitude: this.props.job.pickupLongitude,
-	      pickupTimeDate: this.props.job.pickupTimeDate,
-	      pickupAddress: this.props.job.pickupAddress,
-	      pickupPostalCode: this.props.job.pickupPostalCode,
-	      pickupCountryId: this.props.job.pickupCountryId, // assign first
-	      pickupContactName: this.props.job.pickupContactName,
-	      pickupContactNumber: this.props.job.pickupContactNumber,
-	      dropoffLatitude: this.props.job.dropoffLatitude,
-	      dropoffLongitude: this.props.job.dropoffLongitude,
-	      dropoffTimeDate: this.props.job.dropoffTimeDate,
-	      dropoffAddress: this.props.job.dropoffAddress,
-	      dropoffPostalCode: this.props.job.dropoffPostalCode,
-	      dropoffCountryId: this.props.job.dropoffCountryId, // assign first
-	      dropoffContactName: this.props.job.dropoffContactName,
-	      dropoffContactNumber: this.props.job.dropoffContactNumber,
-	      courierCurrentLatitude: this.props.job.courierCurrentLatitude, // to be updated when not assigned && not completed
-	      courierCurrentLongitude: this.props.job.courierCurrentLongitude,
-	      price: this.props.job.price
-	    };
+	    return this.props.job;
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 	    this.setState(nextProps);
@@ -30472,7 +30532,7 @@
 	    }
 	  },
 	  render: function render() {
-	    var _this = this;
+	    var _this2 = this;
 	
 	    return _react2.default.createElement(
 	      'div',
@@ -30496,17 +30556,27 @@
 	            null,
 	            'Requested by: ',
 	            this.state.clientDetails.name,
-	            ' ',
+	            ', ',
 	            this.clientRating()
 	          )
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'two columns' },
+	          { className: 'two columns text-align-center' },
+	          _react2.default.createElement(
+	            'strong',
+	            null,
+	            '$',
+	            this.state.price
+	          ),
+	          ' (',
+	          this.state.itemCategory.name,
+	          ')',
+	          _react2.default.createElement('br', null),
 	          _react2.default.createElement(
 	            'button',
 	            { type: 'button', name: 'button', onClick: function onClick() {
-	                return _this.props.acceptJob(_this.state.id);
+	                return _this2.props.acceptJob(_this2.state.id);
 	              } },
 	            'Accept'
 	          )

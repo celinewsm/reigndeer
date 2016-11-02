@@ -30,13 +30,92 @@ var CourierJobsListing = React.createClass({
   },
   componentDidMount: function(){
     socket.emit('courier join channels', currentUserCourier.id);
+    this.getUserLocation()
   },
+  getUserLocation: function(){
+    console.log("execute getUserLocation")
+  if (!navigator.geolocation){
+    console.log("geolocation not supported");
+    return;
+  }
+  var obj = this;
+  function success(position) {
+    var latitude  = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    console.log('Latitude is ' + latitude + '° Longitude is ' + longitude + '°')
+
+    obj.setState({userCurrentLatitude: latitude,
+                  userCurrentLongitude: longitude})
+    // console.log("https://maps.googleapis.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&zoom=13&size=300x300&sensor=false")
+
+  };
+  function error() {
+    console.log("Unable to retrieve your location")
+  };
+
+  navigator.geolocation.getCurrentPosition(success, error);
+
+},
+filterByNearby: function(){
+    var obj = this
+    // distance between pick up point and distance between user less than 10 km
+    var filteredJobs = this.state.jobs.filter(function (job) { return calcCrow(job.pickupLatitude,job.pickupLongitude,obj.state.userCurrentLatitude,obj.state.userCurrentLongitude) < 5 })
+
+    console.log(filteredJobs)
+    this.setState({
+      oldJobs: this.state.jobs,
+      jobs: filteredJobs,
+      nearMeTriggered: true,
+    })
+
+
+    //This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
+    function calcCrow(lat1, lon1, lat2, lon2)
+    {
+      var R = 6371; // km
+      var dLat = toRad(lat2-lat1);
+      var dLon = toRad(lon2-lon1);
+      var lat1 = toRad(lat1);
+      var lat2 = toRad(lat2);
+
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      var d = R * c;
+      return d;
+    }
+
+    // Converts numeric degrees to radians
+    function toRad(Value)
+    {
+        return Value * Math.PI / 180;
+    }
+
+},
+buttonToShow: function(){
+  console.log("does it reach buttonToShow?")
+
+  if(!this.state.nearMeTriggered){
+    if(this.state.userCurrentLatitude !== undefined){
+      return <div><button onClick={() => this.filterByNearby() }>Near Me</button></div>
+    }
+  } else {
+    return <div><button onClick={() => this.previousQuery() }>View All</button></div>
+
+  }
+},
+previousQuery: function(){
+  this.setState({
+    jobs: this.state.oldJobs,
+    nearMeTriggered: false,
+  })
+},
   render: function () {
     return (
       <div className="container">
         <div className="row text-align-center">
           <h1 className="zero-margins">Jobs Available</h1>
-          <p><button>Near Me</button></p>
+          {this.buttonToShow()}
         </div>
         {
           this.state.jobs.map(function(job) {
@@ -50,34 +129,7 @@ var CourierJobsListing = React.createClass({
 
 var Job = React.createClass({
   getInitialState: function(){
-    return {
-      id: this.props.job.id,
-      clientId: this.props.job.clientId,
-      clientDetails: this.props.job.clientDetails,
-      courierId: this.props.job.courierId, // to be assigned later
-      status: this.props.job.status, // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
-      itemType: this.props.job.itemType,
-      itemDescription: this.props.job.itemDescription,
-      pickupLatitude: this.props.job.pickupLatitude,
-      pickupLongitude: this.props.job.pickupLongitude,
-      pickupTimeDate: this.props.job.pickupTimeDate,
-      pickupAddress: this.props.job.pickupAddress,
-      pickupPostalCode: this.props.job.pickupPostalCode,
-      pickupCountryId: this.props.job.pickupCountryId, // assign first
-      pickupContactName: this.props.job.pickupContactName,
-      pickupContactNumber: this.props.job.pickupContactNumber,
-      dropoffLatitude: this.props.job.dropoffLatitude,
-      dropoffLongitude: this.props.job.dropoffLongitude,
-      dropoffTimeDate: this.props.job.dropoffTimeDate,
-      dropoffAddress: this.props.job.dropoffAddress,
-      dropoffPostalCode: this.props.job.dropoffPostalCode,
-      dropoffCountryId: this.props.job.dropoffCountryId, // assign first
-      dropoffContactName: this.props.job.dropoffContactName,
-      dropoffContactNumber: this.props.job.dropoffContactNumber,
-      courierCurrentLatitude: this.props.job.courierCurrentLatitude, // to be updated when not assigned && not completed
-      courierCurrentLongitude: this.props.job.courierCurrentLongitude,
-      price: this.props.job.price
-    }
+    return this.props.job
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState(nextProps);
@@ -97,9 +149,10 @@ render: function(){
         <div className="row">
             <div className="eight columns offset-by-one">
               <h5 className="zero-margins">JobID: 1300{this.state.id}</h5>
-              <div>Requested by: {this.state.clientDetails.name} {this.clientRating()}</div>
+              <div>Requested by: {this.state.clientDetails.name}, {this.clientRating()}</div>
             </div>
-            <div className="two columns">
+            <div className="two columns text-align-center">
+              <strong>${this.state.price}</strong> ({this.state.itemCategory.name})<br/>
               <button type="button" name="button" onClick={() => this.props.acceptJob(this.state.id)} >Accept</button>
             </div>
           </div>

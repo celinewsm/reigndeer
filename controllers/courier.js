@@ -13,6 +13,10 @@ router.get('/', function (req, res) {
       model: db.user,
       as: 'clientDetails',
       attributes: ['name', 'mobile', 'rating','jobQty']
+    },{
+      model: db.itemCategory,
+      as: 'itemCategory',
+      attributes: ['name']
     }]
   }).then(function(jobs) {
     // users will be an array of all User instances
