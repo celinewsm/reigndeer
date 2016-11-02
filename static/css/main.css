@@ -25,5 +25,13 @@ input #newJobPickupTimeDate {
 }
 
 .text-align-right {
-  text-align: right;  
+  text-align: right;
+}
+
+.inline-block{
+  display: inline-block;
+}
+
+.zero-margins{
+  margin: 0;
 }

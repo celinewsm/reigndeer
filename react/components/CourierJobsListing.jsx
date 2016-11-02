@@ -9,7 +9,20 @@ var CourierJobsListing = React.createClass({
   getInitialState: function () {
     return {
       initialJobs: jobsAvailable,
-      jobs: []
+      jobs: [],
+      nearMeTriggered: false,
+    }
+  },
+  acceptJob: function(jobId){
+    for ( var i = 0 ; i < this.state.jobs.length ; i++ ){
+      if (this.state.jobs[i].id === jobId){
+        var jobs = this.state.jobs
+        jobs.splice(i, 1)
+        this.setState({
+          jobs: jobs
+        })
+        socket.emit('courier accepts job', {jobId: jobId, courierId: currentUserCourier.id});
+      }
     }
   },
   componentWillMount: function () {
@@ -22,11 +35,12 @@ var CourierJobsListing = React.createClass({
     return (
       <div className="container">
         <div className="row text-align-center">
-          <h1>Jobs Available</h1>
+          <h1 className="zero-margins">Jobs Available</h1>
+          <p><button>Near Me</button></p>
         </div>
         {
           this.state.jobs.map(function(job) {
-            return <Job key={job.id} job={job} />
+            return <Job key={job.id} job={job} acceptJob={this.acceptJob} />
           }.bind(this))
         }
       </div>
@@ -39,6 +53,7 @@ var Job = React.createClass({
     return {
       id: this.props.job.id,
       clientId: this.props.job.clientId,
+      clientDetails: this.props.job.clientDetails,
       courierId: this.props.job.courierId, // to be assigned later
       status: this.props.job.status, // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
       itemType: this.props.job.itemType,
@@ -67,17 +82,25 @@ var Job = React.createClass({
   componentWillReceiveProps: function(nextProps) {
     this.setState(nextProps);
 },
+clientRating: function(){
+  if (this.state.clientDetails.rating){
+    return (
+        <div className="inline-block">{this.state.clientDetails.rating}/5 out of {this.state.clientDetails.jobQty} requests</div>
+    )
+  }
+},
 render: function(){
       return (
         <div className="row" style={{"border": "1px solid black",
                                 "padding": "1em",
                               "marginBottom": "1.5em"}}>
         <div className="row">
-            <div className="five columns offset-by-one">
-              <h5>JobID: 1300{this.state.id}</h5>
+            <div className="eight columns offset-by-one">
+              <h5 className="zero-margins">JobID: 1300{this.state.id}</h5>
+              <div>Requested by: {this.state.clientDetails.name} {this.clientRating()}</div>
             </div>
-            <div className="five columns">
-              <button type="button" name="button" onClick={() => this.acceptJob()} >Accept</button>
+            <div className="two columns">
+              <button type="button" name="button" onClick={() => this.props.acceptJob(this.state.id)} >Accept</button>
             </div>
           </div>
           <div className="row">
@@ -85,22 +108,14 @@ render: function(){
           <div className="row">
             <div className="five columns offset-by-one">
               <div className="row">
-                  <h5>Pickup</h5>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Name</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.pickupContactName}
-                </div>
+                  <p className="zero-margins"><u>Pickup</u></p>
               </div>
               <div className="row">
                 <div className="three columns">
                 <strong>Contact</strong>
                 </div>
                 <div className="nine columns">
-                  {this.state.pickupContactNumber}
+                  {this.state.pickupContactName} ({this.state.pickupContactNumber})
                 </div>
               </div>
               <div className="row">
@@ -108,17 +123,7 @@ render: function(){
                 <strong>Address</strong>
                 </div>
                 <div className="nine columns">
-                  {this.state.pickupAddress}, <br/>
-                  Singapore {this.state.pickupPostalCode}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Date</strong>
-                </div>
-                <div className="nine columns">
-                    {this.state.pickupTimeDate.slice(0,10)}
+                  {this.state.pickupAddress}, {this.state.pickupPostalCode}
                 </div>
               </div>
 
@@ -128,7 +133,7 @@ render: function(){
                 </div>
                 <div className="nine columns">
                   <p>
-                    {this.state.pickupTimeDate.slice(11,16)}
+                    {this.state.pickupTimeDate.slice(0,10)}, {this.state.pickupTimeDate.slice(11,16)}
                   </p>
                 </div>
               </div>
@@ -136,21 +141,13 @@ render: function(){
             </div>
 
             <div className="five columns">
-              <h5>Dropoff</h5>
-              <div className="row">
-                <div className="three columns">
-                <strong>Name</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.dropoffContactName}
-                </div>
-              </div>
+              <p className="zero-margins"><u>Dropoff</u></p>
               <div className="row">
                 <div className="three columns">
                 <strong>Contact</strong>
                 </div>
                 <div className="nine columns">
-                  {this.state.dropoffContactNumber}
+                  {this.state.dropoffContactName} ({this.state.dropoffContactNumber})
                 </div>
               </div>
               <div className="row">
@@ -158,17 +155,7 @@ render: function(){
                 <strong>Address</strong>
                 </div>
                 <div className="nine columns">
-                  {this.state.dropoffAddress}, <br/>
-                  Singapore {this.state.dropoffPostalCode}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Date</strong>
-                </div>
-                <div className="nine columns">
-                    {this.state.dropoffTimeDate.slice(0,10)}
+                  {this.state.dropoffAddress}, {this.state.dropoffPostalCode}
                 </div>
               </div>
 
@@ -177,12 +164,11 @@ render: function(){
                 <strong>Time</strong>
                 </div>
                 <div className="nine columns">
-                  <p>
-                    {this.state.dropoffTimeDate.slice(11,16)}
-                  </p>
+                    <p>
+                      {this.state.dropoffTimeDate.slice(0,10)}, {this.state.dropoffTimeDate.slice(11,16)}
+                    </p>
                 </div>
               </div>
-
 
             </div>
           </div>

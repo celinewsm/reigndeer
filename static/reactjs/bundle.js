@@ -22027,8 +22027,23 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    socket.emit('client join channels', currentUserClient.id);
+	
+	    socket.on('courier accepted client job', this.courierUpdatesJob);
 	  },
-	  updateJob: function updateJob(jobId, updatedJob) {
+	  courierUpdatesJob: function courierUpdatesJob(job) {
+	    console.log("courierUpdateJob data:", job);
+	
+	    for (var i in this.state.jobs) {
+	      if (this.state.jobs[i].id === job.id) {
+	        var jobs = this.state.jobs;
+	        jobs[i] = job, this.setState({
+	          jobs: jobs
+	        });
+	        break;
+	      }
+	    }
+	  },
+	  clientUpdateJob: function clientUpdateJob(jobId, updatedJob) {
 	
 	    for (var i in this.state.jobs) {
 	      if (this.state.jobs[i].id === jobId) {
@@ -22070,7 +22085,7 @@
 	        )
 	      ),
 	      this.state.jobs.map(function (job) {
-	        return _react2.default.createElement(Job, { key: job.id, job: job, updateJob: this.updateJob, cancelJob: this.cancelJob });
+	        return _react2.default.createElement(Job, { key: job.id, job: job, clientUpdateJob: this.clientUpdateJob, cancelJob: this.cancelJob });
 	      }.bind(this))
 	    );
 	  }
@@ -22083,7 +22098,8 @@
 	    return {
 	      id: this.props.job.id,
 	      clientId: this.props.job.clientId,
-	      courierId: this.props.job.courierId, // to be assigned later
+	      courierId: this.props.job.courierId,
+	      courierDetails: this.props.job.courierDetails,
 	      status: this.props.job.status, // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
 	      itemType: this.props.job.itemType,
 	      itemDescription: this.props.job.itemDescription,
@@ -22110,7 +22126,7 @@
 	    };
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    this.setState(nextProps);
+	    this.setState(nextProps.job);
 	  },
 	  toggleEdit: function toggleEdit() {
 	    if (this.state.editing) {
@@ -22133,7 +22149,23 @@
 	      editing: false
 	    };
 	    this.setState(updatedJob);
-	    this.props.updateJob(this.state.id, updatedJob);
+	    this.props.clientUpdateJob(this.state.id, updatedJob);
+	  },
+	  acceptedByCourier: function acceptedByCourier() {
+	    if (this.state.courierDetails !== null) {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'ten columns offset-by-one' },
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          this.state.courierDetails.name,
+	          ' will be making the delivery and can be contacted at ',
+	          this.state.courierDetails.mobile,
+	          '.'
+	        )
+	      );
+	    }
 	  },
 	  render: function render() {
 	    var _this = this;
@@ -22178,7 +22210,6 @@
 	            )
 	          )
 	        ),
-	        _react2.default.createElement('div', { className: 'row' }),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'row' },
@@ -22399,6 +22430,11 @@
 	                )
 	              )
 	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            this.acceptedByCourier()
 	          )
 	        )
 	      );
@@ -22662,6 +22698,11 @@
 	                )
 	              )
 	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            this.acceptedByCourier()
 	          )
 	        )
 	      );
@@ -30331,8 +30372,21 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      initialJobs: jobsAvailable,
-	      jobs: []
+	      jobs: [],
+	      nearMeTriggered: false
 	    };
+	  },
+	  acceptJob: function acceptJob(jobId) {
+	    for (var i = 0; i < this.state.jobs.length; i++) {
+	      if (this.state.jobs[i].id === jobId) {
+	        var jobs = this.state.jobs;
+	        jobs.splice(i, 1);
+	        this.setState({
+	          jobs: jobs
+	        });
+	        socket.emit('courier accepts job', { jobId: jobId, courierId: currentUserCourier.id });
+	      }
+	    }
 	  },
 	  componentWillMount: function componentWillMount() {
 	    this.setState({ jobs: this.state.initialJobs });
@@ -30349,12 +30403,21 @@
 	        { className: 'row text-align-center' },
 	        _react2.default.createElement(
 	          'h1',
-	          null,
+	          { className: 'zero-margins' },
 	          'Jobs Available'
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          _react2.default.createElement(
+	            'button',
+	            null,
+	            'Near Me'
+	          )
 	        )
 	      ),
 	      this.state.jobs.map(function (job) {
-	        return _react2.default.createElement(Job, { key: job.id, job: job });
+	        return _react2.default.createElement(Job, { key: job.id, job: job, acceptJob: this.acceptJob });
 	      }.bind(this))
 	    );
 	  }
@@ -30367,6 +30430,7 @@
 	    return {
 	      id: this.props.job.id,
 	      clientId: this.props.job.clientId,
+	      clientDetails: this.props.job.clientDetails,
 	      courierId: this.props.job.courierId, // to be assigned later
 	      status: this.props.job.status, // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
 	      itemType: this.props.job.itemType,
@@ -30395,6 +30459,18 @@
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 	    this.setState(nextProps);
 	  },
+	  clientRating: function clientRating() {
+	    if (this.state.clientDetails.rating) {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'inline-block' },
+	        this.state.clientDetails.rating,
+	        '/5 out of ',
+	        this.state.clientDetails.jobQty,
+	        ' requests'
+	      );
+	    }
+	  },
 	  render: function render() {
 	    var _this = this;
 	
@@ -30408,21 +30484,29 @@
 	        { className: 'row' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'five columns offset-by-one' },
+	          { className: 'eight columns offset-by-one' },
 	          _react2.default.createElement(
 	            'h5',
-	            null,
+	            { className: 'zero-margins' },
 	            'JobID: 1300',
 	            this.state.id
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            'Requested by: ',
+	            this.state.clientDetails.name,
+	            ' ',
+	            this.clientRating()
 	          )
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'five columns' },
+	          { className: 'two columns' },
 	          _react2.default.createElement(
 	            'button',
 	            { type: 'button', name: 'button', onClick: function onClick() {
-	                return _this.acceptJob();
+	                return _this.props.acceptJob(_this.state.id);
 	              } },
 	            'Accept'
 	          )
@@ -30439,27 +30523,13 @@
 	            'div',
 	            { className: 'row' },
 	            _react2.default.createElement(
-	              'h5',
-	              null,
-	              'Pickup'
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'three columns' },
+	              'p',
+	              { className: 'zero-margins' },
 	              _react2.default.createElement(
-	                'strong',
+	                'u',
 	                null,
-	                'Name'
+	                'Pickup'
 	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'nine columns' },
-	              this.state.pickupContactName
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -30477,7 +30547,10 @@
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'nine columns' },
-	              this.state.pickupContactNumber
+	              this.state.pickupContactName,
+	              ' (',
+	              this.state.pickupContactNumber,
+	              ')'
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -30497,27 +30570,7 @@
 	              { className: 'nine columns' },
 	              this.state.pickupAddress,
 	              ', ',
-	              _react2.default.createElement('br', null),
-	              'Singapore ',
 	              this.state.pickupPostalCode
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'three columns' },
-	              _react2.default.createElement(
-	                'strong',
-	                null,
-	                'Date'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'nine columns' },
-	              this.state.pickupTimeDate.slice(0, 10)
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -30538,6 +30591,8 @@
 	              _react2.default.createElement(
 	                'p',
 	                null,
+	                this.state.pickupTimeDate.slice(0, 10),
+	                ', ',
 	                this.state.pickupTimeDate.slice(11, 16)
 	              )
 	            )
@@ -30547,26 +30602,12 @@
 	          'div',
 	          { className: 'five columns' },
 	          _react2.default.createElement(
-	            'h5',
-	            null,
-	            'Dropoff'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
+	            'p',
+	            { className: 'zero-margins' },
 	            _react2.default.createElement(
-	              'div',
-	              { className: 'three columns' },
-	              _react2.default.createElement(
-	                'strong',
-	                null,
-	                'Name'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'nine columns' },
-	              this.state.dropoffContactName
+	              'u',
+	              null,
+	              'Dropoff'
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -30584,7 +30625,10 @@
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'nine columns' },
-	              this.state.dropoffContactNumber
+	              this.state.dropoffContactName,
+	              ' (',
+	              this.state.dropoffContactNumber,
+	              ')'
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -30604,27 +30648,7 @@
 	              { className: 'nine columns' },
 	              this.state.dropoffAddress,
 	              ', ',
-	              _react2.default.createElement('br', null),
-	              'Singapore ',
 	              this.state.dropoffPostalCode
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'three columns' },
-	              _react2.default.createElement(
-	                'strong',
-	                null,
-	                'Date'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'nine columns' },
-	              this.state.dropoffTimeDate.slice(0, 10)
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -30645,6 +30669,8 @@
 	              _react2.default.createElement(
 	                'p',
 	                null,
+	                this.state.dropoffTimeDate.slice(0, 10),
+	                ', ',
 	                this.state.dropoffTimeDate.slice(11, 16)
 	              )
 	            )

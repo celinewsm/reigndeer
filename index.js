@@ -74,8 +74,6 @@ io.on('connection', function (socket) {
   });
 
   socket.on('client updates job', function(updatedJob){
-    console.log("client updates job socket")
-    console.log("updatedJob>>>>>",updatedJob)
     db.job.update({
       pickupContactNumber: updatedJob.pickupContactNumber,
       pickupContactName: updatedJob.pickupContactName,
@@ -120,23 +118,52 @@ io.on('connection', function (socket) {
     });
   });
 
-  // app.use(function(req,res,next){
-  //   if (req.user){
-  //     db.job.findAll({
-  //       where: {
-  //         clientId: userId,
-  //         $not: {status: 'Cancelled'},
-  //        },
-  //     }).then(function(jobs) {
-  //       // users will be an array of all User instances
-  //       for (var i = 0 ; i < jobs.length ; i++){
-  //         console.log("joining room")
-  //         socket.join(jobs[i].id)
-  //       }
-  //     });
-  //   }
-  //   next()
-  // })
+  socket.on('courier join channels', function(userId){
+    db.job.findAll({
+      where: {
+        courierId: userId,
+        $not: {status: 'Cancelled'},
+        $not: {status: 'Completed'},
+       },
+    }).then(function(jobs) {
+      // users will be an array of all User instances
+      for (var i = 0 ; i < jobs.length ; i++){
+        console.log("joining room")
+        socket.join(jobs[i].id)
+      }
+    });
+  });
+
+  socket.on('courier accepts job', function(data){
+    db.job.update({
+      status: "Accepted",
+      courierId: data.courierId
+    }, {
+      where: {
+        id: data.jobId
+      }
+    }).then(function() {
+
+      db.job.find({
+        where: {
+          id: data.jobId
+         },
+        include: [{
+          model: db.user,
+          as: 'courierDetails',
+          attributes: ['name', 'mobile', 'rating','jobQty']
+        }]
+      }).then(function(job) {
+
+        socket.broadcast.to(data.jobId).emit('courier accepted client job', job);
+
+      });
+
+
+    });
+
+  })
+
 
 
 

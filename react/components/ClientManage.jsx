@@ -17,8 +17,27 @@ var ClientManage = React.createClass({
   },
   componentDidMount: function(){
     socket.emit('client join channels', currentUserClient.id);
+
+    socket.on('courier accepted client job', this.courierUpdatesJob);
   },
-  updateJob: function(jobId,updatedJob){
+  courierUpdatesJob: function(job){
+    console.log("courierUpdateJob data:",job)
+
+    for(var i in this.state.jobs){
+       if(this.state.jobs[i].id === job.id){
+         var jobs = this.state.jobs
+         jobs[i] = job,
+
+         this.setState({
+           jobs: jobs
+         })
+         break
+       }
+     }
+
+
+  },
+  clientUpdateJob: function(jobId,updatedJob){
 
    for(var i in this.state.jobs){
       if(this.state.jobs[i].id === jobId){
@@ -59,7 +78,7 @@ var ClientManage = React.createClass({
         </div>
         {
           this.state.jobs.map(function(job) {
-            return <Job key={job.id} job={job} updateJob={this.updateJob} cancelJob={this.cancelJob} />
+            return <Job key={job.id} job={job} clientUpdateJob={this.clientUpdateJob} cancelJob={this.cancelJob} />
           }.bind(this))
         }
       </div>
@@ -72,7 +91,8 @@ var Job = React.createClass({
     return {
       id: this.props.job.id,
       clientId: this.props.job.clientId,
-      courierId: this.props.job.courierId, // to be assigned later
+      courierId: this.props.job.courierId,
+      courierDetails:this.props.job.courierDetails,
       status: this.props.job.status, // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
       itemType: this.props.job.itemType,
       itemDescription: this.props.job.itemDescription,
@@ -99,7 +119,7 @@ var Job = React.createClass({
     }
   },
   componentWillReceiveProps: function(nextProps) {
-    this.setState(nextProps);
+    this.setState(nextProps.job);
 },
 toggleEdit: function() {
   if (this.state.editing){
@@ -122,7 +142,16 @@ saveState: function(){
     editing: false
   }
   this.setState(updatedJob);
-  this.props.updateJob(this.state.id,updatedJob)
+  this.props.clientUpdateJob(this.state.id,updatedJob)
+},
+acceptedByCourier: function(){
+  if (this.state.courierDetails !== null){
+      return(
+        <div className="ten columns offset-by-one">
+          <div>{this.state.courierDetails.name} will be making the delivery and can be contacted at {this.state.courierDetails.mobile}.</div>
+        </div>
+      )
+  }
 },
 render: function(){
     if (!this.state.editing){
@@ -138,8 +167,6 @@ render: function(){
               <button type="button" name="button" onClick={() => this.toggleEdit()} >Edit</button>
               <button type="button" name="button" onClick={() => this.props.cancelJob(this.state.id)} >Cancel</button>
             </div>
-          </div>
-          <div className="row">
           </div>
           <div className="row">
             <div className="five columns offset-by-one">
@@ -244,6 +271,9 @@ render: function(){
 
 
             </div>
+            <div className="row">
+              {this.acceptedByCourier()}
+            </div>
           </div>
         </div>
       )
@@ -262,6 +292,7 @@ render: function(){
               <button type="button" name="button" onClick={() => this.toggleEdit()} >Close Edit</button>
             </div>
           </div>
+
           <div className="row">
             <div className="five columns offset-by-one">
               <div className="row">
@@ -364,6 +395,9 @@ render: function(){
               </div>
 
 
+            </div>
+            <div className="row">
+              {this.acceptedByCourier()}
             </div>
           </div>
         </div>

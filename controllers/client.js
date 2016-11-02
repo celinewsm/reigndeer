@@ -16,7 +16,12 @@ router.get('/manage', function (req, res) {
       clientId: req.user.id,
       $not: {status: 'Cancelled'},
      },
-    order: 'id DESC'
+    order: 'id DESC',
+    include: [{
+      model: db.user,
+      as: 'courierDetails',
+      attributes: ['name', 'mobile', 'rating','jobQty']
+    }]
   }).then(function(jobs) {
     // users will be an array of all User instances
     res.render('client/manage',{jobsCreatedByUser: jobs})
