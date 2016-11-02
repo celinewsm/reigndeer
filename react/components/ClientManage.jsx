@@ -17,8 +17,9 @@ var ClientManage = React.createClass({
   },
   componentDidMount: function(){
     socket.emit('client join channels', currentUserClient.id);
-
     socket.on('courier accepted client job', this.courierUpdatesJob);
+    socket.on('courier updated status and/or position', this.courierUpdatesJob);
+
   },
   courierUpdatesJob: function(job){
     console.log("courierUpdateJob data:",job)

@@ -22027,8 +22027,8 @@
 	  },
 	  componentDidMount: function componentDidMount() {
 	    socket.emit('client join channels', currentUserClient.id);
-	
 	    socket.on('courier accepted client job', this.courierUpdatesJob);
+	    socket.on('courier updated status and/or position', this.courierUpdatesJob);
 	  },
 	  courierUpdatesJob: function courierUpdatesJob(job) {
 	    console.log("courierUpdateJob data:", job);
@@ -30766,9 +30766,395 @@
 /*!************************************************!*\
   !*** ./react/components/CourierManageJobs.jsx ***!
   \************************************************/
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 34);
+	
+	var _socket = __webpack_require__(/*! socket.io-client */ 173);
+	
+	var _socket2 = _interopRequireDefault(_socket);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var socket = (0, _socket2.default)(window.location.host);
+	
+	var startTrackingCourierLocation;
+	
+	var CourierManageJobs = _react2.default.createClass({
+	  displayName: 'CourierManageJobs',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      initialJobs: jobsAccepted,
+	      jobs: []
+	    };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    this.setState({ jobs: this.state.initialJobs });
+	  },
+	  componentDidMount: function componentDidMount() {
+	    // might only need it on manage page
+	    socket.emit('courier join channels', currentUserCourier.id);
+	    socket.on('update courier on job update', this.clientUpdatesJob);
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'container' },
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'row text-align-center' },
+	        _react2.default.createElement(
+	          'h1',
+	          { className: 'zero-margins' },
+	          'Jobs Accepted'
+	        )
+	      ),
+	      this.state.jobs.map(function (job) {
+	        return _react2.default.createElement(Job, { key: job.id, job: job });
+	      }.bind(this))
+	    );
+	  }
+	});
+	
+	var Job = _react2.default.createClass({
+	  displayName: 'Job',
+	
+	  getInitialState: function getInitialState() {
+	    return this.props.job;
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    this.setState(nextProps.job);
+	  },
+	  clientRating: function clientRating() {
+	    if (this.state.clientDetails.rating) {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'inline-block' },
+	        this.state.clientDetails.rating,
+	        '/5 out of ',
+	        this.state.clientDetails.jobQty,
+	        ' requests'
+	      );
+	    }
+	  },
+	  courierStartsPickup: function courierStartsPickup() {
+	
+	    this.setState({
+	      status: "Enroute to pickup"
+	    });
+	
+	    var obj = this;
+	    startTrackingCourierLocation = setInterval(function () {
+	      if (!navigator.geolocation) {
+	        console.log("geolocation not supported");
+	        return;
+	      } else {
+	        navigator.geolocation.getCurrentPosition(success, error);
+	      }
+	
+	      function success(position) {
+	        var latitude = position.coords.latitude;
+	        var longitude = position.coords.longitude;
+	        console.log('Courier current latitude: ' + latitude + '° Longitude: ' + longitude + '°');
+	
+	        obj.setState({
+	          courierCurrentLatitude: latitude,
+	          courierCurrentLongitude: longitude
+	        });
+	
+	        // if ( obj.state.courierCurrentLatitude != latitude && obj.state.courierCurrentLongitude != longitude){
+	        socket.emit('update courier position', { jobId: obj.state.id,
+	          status: "Enroute to pickup",
+	          courierCurrentLatitude: latitude,
+	          courierCurrentLongitude: longitude });
+	        // }
+	      };
+	      function error() {
+	        console.log("Unable to retrieve your location");
+	      };
+	    }, 5000);
+	    // use 60000 after testing
+	  },
+	  pauseCourierActivity: function pauseCourierActivity() {
+	    this.setState({
+	      status: "Accepted"
+	    });
+	    clearInterval(startTrackingCourierLocation);
+	
+	    socket.emit('pause courier activity', { jobId: this.state.id,
+	      status: "Accepted" });
+	  },
+	  courierStartsDelivery: function courierStartsDelivery() {},
+	  buttonToShow: function buttonToShow() {
+	    var _this = this;
+	
+	    if (this.state.status === "Accepted") {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'button', name: 'button', onClick: function onClick() {
+	              return _this.courierStartsPickup();
+	            } },
+	          'Enroute Pickup'
+	        )
+	      );
+	    } else if (this.state.status === "Enroute to pickup") {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'button', name: 'button', onClick: function onClick() {
+	              return _this.courierStartsDelivery();
+	            } },
+	          'Enroute Delivery'
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'button', name: 'button', onClick: function onClick() {
+	              return _this.pauseCourierActivity();
+	            } },
+	          'Pause'
+	        )
+	      );
+	    } else if (this.state.status === "Enroute to deliver") {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'button', name: 'button', onClick: function onClick() {
+	              return _this.courierCompletedDelivery();
+	            } },
+	          'Delivery Made'
+	        )
+	      );
+	    }
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'row', style: { "border": "1px solid black",
+	          "padding": "1em",
+	          "marginBottom": "1.5em" } },
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'row' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'eight columns offset-by-one' },
+	          _react2.default.createElement(
+	            'h5',
+	            { className: 'zero-margins' },
+	            'JobID: 1300',
+	            this.state.id
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            'Requested by: ',
+	            this.state.clientDetails.name,
+	            ', ',
+	            this.clientRating()
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'two columns text-align-center' },
+	          _react2.default.createElement(
+	            'strong',
+	            null,
+	            '$',
+	            this.state.price
+	          ),
+	          ' (',
+	          this.state.itemCategory.name,
+	          ')',
+	          _react2.default.createElement('br', null),
+	          this.buttonToShow()
+	        )
+	      ),
+	      _react2.default.createElement('div', { className: 'row' }),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'row' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'five columns offset-by-one' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'p',
+	              { className: 'zero-margins' },
+	              _react2.default.createElement(
+	                'u',
+	                null,
+	                'Pickup'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Contact'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.pickupContactName,
+	              ' (',
+	              this.state.pickupContactNumber,
+	              ')'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Address'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.pickupAddress,
+	              ', ',
+	              this.state.pickupPostalCode
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Time'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                this.state.pickupTimeDate.slice(0, 10),
+	                ', ',
+	                this.state.pickupTimeDate.slice(11, 16)
+	              )
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'five columns' },
+	          _react2.default.createElement(
+	            'p',
+	            { className: 'zero-margins' },
+	            _react2.default.createElement(
+	              'u',
+	              null,
+	              'Dropoff'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Contact'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.dropoffContactName,
+	              ' (',
+	              this.state.dropoffContactNumber,
+	              ')'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Address'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              this.state.dropoffAddress,
+	              ', ',
+	              this.state.dropoffPostalCode
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'three columns' },
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Time'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'nine columns' },
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                this.state.dropoffTimeDate.slice(0, 10),
+	                ', ',
+	                this.state.dropoffTimeDate.slice(11, 16)
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	if (document.getElementById('courierManageJobs') !== null) {
+	  (0, _reactDom.render)(_react2.default.createElement(CourierManageJobs, null), document.getElementById('courierManageJobs'));
+	}
 
 /***/ }
 /******/ ]);

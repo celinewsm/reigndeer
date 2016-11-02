@@ -160,6 +160,63 @@ io.on('connection', function (socket) {
       });
     });
   })
+
+  socket.on('update courier position', function(data){
+    console.log("update courier position triggered")
+    db.job.update({
+      status: data.status,
+      courierCurrentLatitude: data.courierCurrentLatitude,
+      courierCurrentLongitude: data.courierCurrentLongitude,
+    }, {
+      where: {
+        id: data.jobId
+      }
+    }).then(function() {
+
+      db.job.find({
+        where: {
+          id: data.jobId
+         },
+        include: [{
+          model: db.user,
+          as: 'courierDetails',
+          attributes: ['name', 'mobile', 'rating','jobQty']
+        }]
+      }).then(function(job) {
+        socket.broadcast.to(data.jobId).emit('courier updated status and/or position', job);
+      });
+    });
+  })
+
+  socket.on('pause courier activity', function(data){
+    console.log("pause courier activity triggered")
+    db.job.update({
+      status: data.status,
+      courierCurrentLatitude: null,
+      courierCurrentLongitude: null,
+    }, {
+      where: {
+        id: data.jobId
+      }
+    }).then(function() {
+      db.job.find({
+        where: {
+          id: data.jobId
+         },
+        include: [{
+          model: db.user,
+          as: 'courierDetails',
+          attributes: ['name', 'mobile', 'rating','jobQty']
+        }]
+      }).then(function(job) {
+        socket.broadcast.to(data.jobId).emit('courier updated status and/or position', job);
+      });
+    });
+  })
+
+
+
+
 });
 
 
