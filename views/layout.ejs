@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="/css/skeleton.css">
   <link rel="stylesheet" href="/css/main.css">
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -31,9 +32,9 @@
 </head>
 <body>
 
-  <script>
+  <!-- <script>
     var currentUser = <%- JSON.stringify(currentUser) %>
-  </script>
+  </script> -->
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -42,7 +43,6 @@
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="/socket.io/socket.io.js"></script>
   <script src="/reactjs/bundle.js" type="text/javascript"></script>
   <script src="/js/main.js"></script>
 </body>

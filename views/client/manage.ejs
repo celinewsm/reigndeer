@@ -1,6 +1,9 @@
 <script>
   var jobsCreatedByUser = <%- JSON.stringify(jobsCreatedByUser) %>
+  var currentUserClient = <%- JSON.stringify(currentUser) %>
 </script>
 
-<div id="clientManage">
-</div>
+<div id="clientManage"></div>
+
+<!-- to join socket channels -->
+<script src="/js/clientManage.js"></script>

@@ -5,13 +5,6 @@ let socket = io()
 
 window.onload = function(){
 
-  if(currentUser !== undefined){
-    console.log("user found", currentUser)
-    socket.emit('client join channels', currentUser.id);
-  } else {
-    console.log("user not found")
-  }
-
 if($("#newJobPickupTimeDate").flatpickr){
   document.getElementById("newJobPickupTimeDate").flatpickr({
     minDate: new Date(), // "today" / "2016-12-20" / 1477673788975
