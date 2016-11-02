@@ -13,7 +13,10 @@ var ClientManage = React.createClass({
     }
   },
   componentWillMount: function () {
-  this.setState({jobs: this.state.initialJobs})
+    this.setState({jobs: this.state.initialJobs})
+  },
+  componentDidMount: function(){
+    socket.emit('client join channels', currentUserClient.id);
   },
   updateJob: function(jobId,updatedJob){
 

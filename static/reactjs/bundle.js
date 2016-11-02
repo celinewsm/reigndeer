@@ -22017,6 +22017,9 @@
 	  componentWillMount: function componentWillMount() {
 	    this.setState({ jobs: this.state.initialJobs });
 	  },
+	  componentDidMount: function componentDidMount() {
+	    socket.emit('client join channels', currentUserClient.id);
+	  },
 	  updateJob: function updateJob(jobId, updatedJob) {
 	
 	    for (var i in this.state.jobs) {
