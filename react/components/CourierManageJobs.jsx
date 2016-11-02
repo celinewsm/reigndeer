@@ -21,6 +21,21 @@ var CourierManageJobs = React.createClass({
     socket.emit('courier join channels', currentUserCourier.id);
     socket.on('update courier on job update', this.clientUpdatesJob);
   },
+  clientUpdatesJob: function(job){
+    console.log("does it reach here?",job)
+
+    for(var i in this.state.jobs){
+       if(this.state.jobs[i].id === job.id){
+         var newJobs = this.state.jobs
+         newJobs[i] = job,
+
+         this.setState({
+           jobs: newJobs
+         })
+         break
+       }
+     }
+  },
   render: function () {
     return (
       <div className="container">
@@ -43,6 +58,13 @@ var Job = React.createClass({
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState(nextProps.job);
+},
+componentDidMount: function(){
+  if (this.state.status === "Enroute to pickup"){
+    this.courierStartsPickup()
+  } else if (this.state.status === "Enroute to deliver"){
+    this.courierStartsDelivery()
+  }
 },
 clientRating: function(){
   if (this.state.clientDetails.rating){
@@ -78,7 +100,7 @@ courierStartsPickup: function(){
 
       // if ( obj.state.courierCurrentLatitude != latitude && obj.state.courierCurrentLongitude != longitude){
         socket.emit('update courier position', {jobId: obj.state.id,
-                                                status: "Enroute to pickup",
+                                                status: obj.state.status,
                                                 courierCurrentLatitude: latitude,
                                                 courierCurrentLongitude: longitude});
       // }
@@ -103,6 +125,19 @@ pauseCourierActivity: function(){
 },
 courierStartsDelivery: function(){
 
+    this.setState({
+      status: "Enroute to deliver"
+    })
+
+},
+courierCompletedDelivery: function(){
+
+  this.setState({
+    status: "Delivered"
+  })
+
+  clearInterval(startTrackingCourierLocation)
+
 },
 buttonToShow: function(){
   if (this.state.status === "Accepted"){
@@ -116,7 +151,20 @@ buttonToShow: function(){
       </div>
     )
   } else if(this.state.status === "Enroute to deliver"){
-    return <div><button type="button" name="button" onClick={() => this.courierCompletedDelivery()} >Delivery Made</button></div>
+
+    return (
+      <div>
+        <button type="button" name="button" onClick={() => this.courierCompletedDelivery()} >Delivery Made</button>
+        <button type="button" name="button" onClick={() => this.pauseCourierActivity()} >Pause</button>
+
+      </div>
+    )
+  } else if (this.state.status === "Enroute to deliver") {
+    return (
+      <div>
+        <button type="button" name="button">Delivered</button>
+  </div>
+    )
   }
 },
 render: function(){

@@ -87,6 +87,7 @@ io.on('connection', function (socket) {
         }]
       }).then(function(job) {
         socket.broadcast.emit('update courier on job update', job);
+                // socket.broadcast.to(data.jobId).emit('update courier on job update', job);
       });
     });
   });

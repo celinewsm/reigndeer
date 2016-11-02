@@ -32,7 +32,7 @@ router.post('/job/new', function(req, res) {
   db.job.create({
     clientId: req.user.id,
     courierId: null, // to be assigned later
-    status: "Pending", // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
+    status: "Pending", // pending, assigned, enroute to pickup, enroute to deliver, delivered, cancelled
     itemType: req.body.itemType,
     itemDescription: req.body.itemDescription,
     pickupLatitude: req.body.pickupLatitude,

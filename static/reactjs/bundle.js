@@ -30803,6 +30803,19 @@
 	    socket.emit('courier join channels', currentUserCourier.id);
 	    socket.on('update courier on job update', this.clientUpdatesJob);
 	  },
+	  clientUpdatesJob: function clientUpdatesJob(job) {
+	    console.log("does it reach here?", job);
+	
+	    for (var i in this.state.jobs) {
+	      if (this.state.jobs[i].id === job.id) {
+	        var newJobs = this.state.jobs;
+	        newJobs[i] = job, this.setState({
+	          jobs: newJobs
+	        });
+	        break;
+	      }
+	    }
+	  },
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
@@ -30831,6 +30844,13 @@
 	  },
 	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
 	    this.setState(nextProps.job);
+	  },
+	  componentDidMount: function componentDidMount() {
+	    if (this.state.status === "Enroute to pickup") {
+	      this.courierStartsPickup();
+	    } else if (this.state.status === "Enroute to deliver") {
+	      this.courierStartsDelivery();
+	    }
 	  },
 	  clientRating: function clientRating() {
 	    if (this.state.clientDetails.rating) {
@@ -30871,7 +30891,7 @@
 	
 	        // if ( obj.state.courierCurrentLatitude != latitude && obj.state.courierCurrentLongitude != longitude){
 	        socket.emit('update courier position', { jobId: obj.state.id,
-	          status: "Enroute to pickup",
+	          status: obj.state.status,
 	          courierCurrentLatitude: latitude,
 	          courierCurrentLongitude: longitude });
 	        // }
@@ -30891,7 +30911,20 @@
 	    socket.emit('pause courier activity', { jobId: this.state.id,
 	      status: "Accepted" });
 	  },
-	  courierStartsDelivery: function courierStartsDelivery() {},
+	  courierStartsDelivery: function courierStartsDelivery() {
+	
+	    this.setState({
+	      status: "Enroute to deliver"
+	    });
+	  },
+	  courierCompletedDelivery: function courierCompletedDelivery() {
+	
+	    this.setState({
+	      status: "Delivered"
+	    });
+	
+	    clearInterval(startTrackingCourierLocation);
+	  },
 	  buttonToShow: function buttonToShow() {
 	    var _this = this;
 	
@@ -30927,6 +30960,7 @@
 	        )
 	      );
 	    } else if (this.state.status === "Enroute to deliver") {
+	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -30936,6 +30970,23 @@
 	              return _this.courierCompletedDelivery();
 	            } },
 	          'Delivery Made'
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'button', name: 'button', onClick: function onClick() {
+	              return _this.pauseCourierActivity();
+	            } },
+	          'Pause'
+	        )
+	      );
+	    } else if (this.state.status === "Enroute to deliver") {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'button', name: 'button' },
+	          'Delivered'
 	        )
 	      );
 	    }
