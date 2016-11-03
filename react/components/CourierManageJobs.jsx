@@ -75,6 +75,12 @@ clientRating: function(){
         <p className="tiny-top-margin zero-paddings zero-margins status-font-size">{this.state.clientDetails.name} - {this.state.clientDetails.rating}/5 out of {this.state.clientDetails.jobQty} requests</p>
       </div>
     )
+  } else {
+    return (
+      <div className="inline-block">
+        <p className="tiny-top-margin zero-paddings zero-margins status-font-size">{this.state.clientDetails.name}</p>
+      </div>
+    )
   }
 },
 courierStartsPickup: function(){

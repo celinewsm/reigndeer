@@ -30481,6 +30481,16 @@
 	          ' requests'
 	        )
 	      );
+	    } else {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'inline-block' },
+	        _react2.default.createElement(
+	          'p',
+	          { className: 'tiny-top-margin zero-paddings zero-margins status-font-size' },
+	          this.state.clientDetails.name
+	        )
+	      );
 	    }
 	  },
 	  render: function render() {
@@ -30719,6 +30729,16 @@
 	          '/5 out of ',
 	          this.state.clientDetails.jobQty,
 	          ' requests'
+	        )
+	      );
+	    } else {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'inline-block' },
+	        _react2.default.createElement(
+	          'p',
+	          { className: 'tiny-top-margin zero-paddings zero-margins status-font-size' },
+	          this.state.clientDetails.name
 	        )
 	      );
 	    }
