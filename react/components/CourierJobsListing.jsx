@@ -78,7 +78,7 @@ var CourierJobsListing = React.createClass({
 filterByNearby: function(){
     var obj = this
     // distance between pick up point and distance between user less than 10 km
-    var filteredJobs = this.state.jobs.filter(function (job) { return calcCrow(job.pickupLatitude,job.pickupLongitude,obj.state.userCurrentLatitude,obj.state.userCurrentLongitude) < 5 })
+    var filteredJobs = this.state.jobs.filter(function (job) { return calcCrow(job.pickupLatitude,job.pickupLongitude,obj.state.userCurrentLatitude,obj.state.userCurrentLongitude) < 2 })
 
     console.log(filteredJobs)
     this.setState({
