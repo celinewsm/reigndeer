@@ -117,7 +117,7 @@ buttonToShow: function(){
       return <div><button className="white-text-white-border-button" onClick={() => this.filterByNearby() }>Near Me</button></div>
     }
   } else {
-    return <div><button onClick={() => this.previousQuery() }>View All</button></div>
+    return <div><button className="white-text-white-border-button" onClick={() => this.previousQuery() }>View All</button></div>
 
   }
 },

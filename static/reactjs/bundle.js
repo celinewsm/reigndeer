@@ -30421,7 +30421,7 @@
 	        null,
 	        _react2.default.createElement(
 	          'button',
-	          { onClick: function onClick() {
+	          { className: 'white-text-white-border-button', onClick: function onClick() {
 	              return _this.previousQuery();
 	            } },
 	          'View All'
