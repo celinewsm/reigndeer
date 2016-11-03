@@ -29702,9 +29702,9 @@
 	        'div',
 	        { className: 'row text-align-center' },
 	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          'Jobs ordered'
+	          'h3',
+	          { className: 'top-margin white-font' },
+	          'Jobs Ordered'
 	        )
 	      ),
 	      this.state.jobs.map(function (job) {
@@ -29832,9 +29832,7 @@
 	    if (!this.state.editing) {
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'row', style: { "border": "1px solid black",
-	            "padding": "1em",
-	            "marginBottom": "1.5em" } },
+	        { className: 'row white-box' },
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'row' },
@@ -29970,11 +29968,7 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'nine columns' },
-	                _react2.default.createElement(
-	                  'p',
-	                  null,
-	                  this.state.pickupTimeDate.slice(11, 16)
-	                )
+	                this.state.pickupTimeDate.slice(11, 16)
 	              )
 	            )
 	          ),
@@ -30077,11 +30071,7 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'nine columns' },
-	                _react2.default.createElement(
-	                  'p',
-	                  null,
-	                  this.state.dropoffTimeDate.slice(11, 16)
-	                )
+	                this.state.dropoffTimeDate.slice(11, 16)
 	              )
 	            )
 	          ),
@@ -30095,9 +30085,9 @@
 	    } else {
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'row', style: { "border": "1px solid black",
-	            "padding": "1em",
-	            "marginBottom": "1.5em" } },
+	        { className: 'row', style: { "padding": "1em",
+	            "marginBottom": "1.5em",
+	            "backgroundColor": "white" } },
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'row' },
@@ -30238,11 +30228,7 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'nine columns' },
-	                _react2.default.createElement(
-	                  'p',
-	                  null,
-	                  this.state.pickupTimeDate.slice(11, 16)
-	                )
+	                this.state.pickupTimeDate.slice(11, 16)
 	              )
 	            )
 	          ),
@@ -30345,11 +30331,7 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'nine columns' },
-	                _react2.default.createElement(
-	                  'p',
-	                  null,
-	                  this.state.dropoffTimeDate.slice(11, 16)
-	                )
+	                this.state.dropoffTimeDate.slice(11, 16)
 	              )
 	            )
 	          ),
@@ -30729,9 +30711,7 @@
 	
 	    return _react2.default.createElement(
 	      'div',
-	      { className: 'row', style: { "border": "1px solid black",
-	          "padding": "1em",
-	          "marginBottom": "1.5em" } },
+	      { className: 'row white-box' },
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'row' },
@@ -31045,9 +31025,9 @@
 	        'div',
 	        { className: 'inline-block' },
 	        this.state.clientDetails.rating,
-	        '/5 out of ',
+	        '/5 (',
 	        this.state.clientDetails.jobQty,
-	        ' requests'
+	        ' jobs)'
 	      );
 	    }
 	  },
@@ -31185,15 +31165,13 @@
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
-	      { className: 'row', style: { "border": "1px solid black",
-	          "padding": "1em",
-	          "marginBottom": "1.5em" } },
+	      { className: 'row white-box' },
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'row' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'eight columns offset-by-one' },
+	          { className: 'six columns offset-by-one' },
 	          _react2.default.createElement(
 	            'h5',
 	            { className: 'zero-margins' },
@@ -31203,7 +31181,6 @@
 	          _react2.default.createElement(
 	            'div',
 	            null,
-	            'Requested by: ',
 	            this.state.clientDetails.name,
 	            ', ',
 	            this.clientRating()
@@ -31211,7 +31188,7 @@
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'two columns text-align-center' },
+	          { className: 'four columns text-align-center' },
 	          _react2.default.createElement(
 	            'strong',
 	            null,

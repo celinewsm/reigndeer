@@ -69,7 +69,7 @@ componentDidMount: function(){
 clientRating: function(){
   if (this.state.clientDetails.rating){
     return (
-        <div className="inline-block">{this.state.clientDetails.rating}/5 out of {this.state.clientDetails.jobQty} requests</div>
+        <div className="inline-block">{this.state.clientDetails.rating}/5 ({this.state.clientDetails.jobQty} jobs)</div>
     )
   }
 },
@@ -173,15 +173,13 @@ buttonToShow: function(){
 },
 render: function(){
       return (
-        <div className="row" style={{"border": "1px solid black",
-                                "padding": "1em",
-                              "marginBottom": "1.5em"}}>
+        <div className="row white-box">
         <div className="row">
-            <div className="eight columns offset-by-one">
+            <div className="six columns offset-by-one">
               <h5 className="zero-margins">JobID: 1300{this.state.id}</h5>
-              <div>Requested by: {this.state.clientDetails.name}, {this.clientRating()}</div>
+              <div>{this.state.clientDetails.name}, {this.clientRating()}</div>
             </div>
-            <div className="two columns text-align-center">
+            <div className="four columns text-align-center">
               <strong>${this.state.price}</strong> ({this.state.itemCategory.name})<br/>
               {this.buttonToShow()}
             </div>

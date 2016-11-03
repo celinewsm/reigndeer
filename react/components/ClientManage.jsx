@@ -73,7 +73,7 @@ var ClientManage = React.createClass({
     return (
       <div className="container">
         <div className="row text-align-center">
-          <h1>Jobs ordered</h1>
+          <h3 className="top-margin white-font">Jobs Ordered</h3>
         </div>
         {
           this.state.jobs.map(function(job) {
@@ -181,9 +181,7 @@ ifCanCancel: function(){
 render: function(){
     if (!this.state.editing){
       return (
-        <div className="row" style={{"border": "1px solid black",
-                                "padding": "1em",
-                              "marginBottom": "1.5em"}}>
+        <div className="row white-box">
         <div className="row">
             <div className="five columns offset-by-one">
               <h5>JobID:1300{this.state.id} | Status:{this.state.status}</h5>
@@ -239,9 +237,7 @@ render: function(){
                 <strong>Time</strong>
                 </div>
                 <div className="nine columns">
-                  <p>
                     {this.state.pickupTimeDate.slice(11,16)}
-                  </p>
                 </div>
               </div>
 
@@ -289,9 +285,7 @@ render: function(){
                 <strong>Time</strong>
                 </div>
                 <div className="nine columns">
-                  <p>
                     {this.state.dropoffTimeDate.slice(11,16)}
-                  </p>
                 </div>
               </div>
 
@@ -306,9 +300,9 @@ render: function(){
     }
     else {
       return (
-        <div className="row" style={{"border": "1px solid black",
-                                "padding": "1em",
-                              "marginBottom": "1.5em"}}>
+        <div className="row" style={{"padding": "1em",
+                              "marginBottom": "1.5em",
+                              "backgroundColor": "white"  }}>
         <div className="row">
             <div className="five columns offset-by-one">
               <h5>JobID:1300{this.state.id} | Status:{this.state.status}</h5>
@@ -364,9 +358,7 @@ render: function(){
                 <strong>Time</strong>
                 </div>
                 <div className="nine columns">
-                  <p>
                     {this.state.pickupTimeDate.slice(11,16)}
-                  </p>
                 </div>
               </div>
 
@@ -414,9 +406,7 @@ render: function(){
                 <strong>Time</strong>
                 </div>
                 <div className="nine columns">
-                  <p>
                     {this.state.dropoffTimeDate.slice(11,16)}
-                  </p>
                 </div>
               </div>
 

@@ -1,10 +1,11 @@
 console.log("main.js connected")
 
-let socket = io()
 
 
-window.onload = function(){
-
-
-
-}
+$(window).scroll(function() {
+	if($(this).scrollTop()) {
+		$('nav').addClass('shadow');
+	} else {
+		$('nav').removeClass('shadow');
+	}
+});

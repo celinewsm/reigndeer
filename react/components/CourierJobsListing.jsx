@@ -160,9 +160,7 @@ clientRating: function(){
 },
 render: function(){
       return (
-        <div className="row" style={{"border": "1px solid black",
-                                "padding": "1em",
-                              "marginBottom": "1.5em"}}>
+        <div className="row white-box">
         <div className="row">
             <div className="eight columns offset-by-one">
               <h5 className="zero-margins">JobID: 1300{this.state.id}</h5>

@@ -10,8 +10,11 @@ var isLoggedIn = require('./middleware/isLoggedIn')
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var dotenv = require('dotenv').config()
+var stripe = require('stripe')(process.env.sk_MY_SECRET_KEY);
 
 // var userType = require('./middleware/userType')
+
+
 
 var port = process.env.PORT || 3000;
 server.listen(port, function () {

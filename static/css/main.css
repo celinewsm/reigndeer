@@ -3,9 +3,9 @@
 }*/
 
 
-input #newJobPickupTimeDate {
+/*input #newJobPickupTimeDate {
   width: 100% !important
-}
+}*/
 
 .validation-red {
     color: red
@@ -36,8 +36,17 @@ input #newJobPickupTimeDate {
   margin: 0;
 }
 
+.top-margin{
+  margin-top: 1.5em
+}
 
+.left-margin{
+  margin-left: 1.5em
+}
 
+.white-font{
+  color: white
+}
 
 /*for maps*/
 html,
@@ -51,6 +60,112 @@ body,
   width: 100%;
   height: 100%;
 }
-.UpdatedText {
-  color: red;
+
+
+/*override stripe button CSS*/
+.stripe-button-el{
+  background-color: transparent !important;
+  background-image: none !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+
+}
+
+.stripe-button-el span{
+  display: inline-block;
+  height: 38px !important;
+  padding: 0 30px !important;
+  /*color: #555 !important;*/
+  text-align: center !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  line-height: 38px !important;
+  letter-spacing: .1rem !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  /*background-color: transparent !important;*/
+  border-radius: 4px !important;
+  border: 1px solid #bbb !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  background-image: none !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+
+  color: #FFF !important;
+  background-color: #33C3F0 !important;
+  border-color: #33C3F0 !important;
+
+}
+
+.stripe-button-el span:hover{
+  color: #FFF !important;
+  background-color: #1EAEDB !important;
+  border-color: #1EAEDB !important; }
+}
+
+select {
+    -webkit-appearance: none !important;
+}
+
+.tiny-top-padding{
+    padding-top: 0.2em !important
+}
+
+.nav-logo{
+  width:2.5em;
+  height:2.5em;
+  margin: 0;
+  padding-top: 0.2em ;
+  padding-left: 0.5em
+}
+
+.nav-name{
+  font-size:1.5em !important;
+}
+
+div .white-box{
+  /*border: 1px solid black !important;*/
+  padding: 1em !important;
+  margin-bottom: 1.5em !important;
+  background-color: white !important;
+  box-shadow: 7px 7px 0px 0px rgba(0, 0, 0, .2);;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+.bg-skew {
+  height: 100%;
+}
+
+body {
+  /*background: #232323;*/
+  background: #303030;
+  text-align: center;
+  font-family: 'Source Sans Pro', sans-serif;
+  position: relative;
+}
+
+.bg-skew {
+  background: tomato;
+  -webkit-transform: skew(0deg, -10deg);
+  transform: skew(0deg, -10deg);
+  padding: 100px 0;
+  margin-top: -200px;
+  z-index: -100;
+}
+
+.content {
+  /*width: 60%;*/
+  -webkit-transform: skew(0deg, 10deg);
+  transform: skew(0deg, 10deg);
 }

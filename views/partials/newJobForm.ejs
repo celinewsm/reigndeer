@@ -1,8 +1,11 @@
+
+
 <div class="container">
-    <div class="row" style="margin-top: 15%">
-      <h3>Pick up request</h3>
+    <div class="row">
+      <h3 class="top-margin white-font">New pick up request</h3>
     </div>
-    <form action="/client/job/new" method="POST">
+    <form action="/client/job/new" method="POST"  class="white-box">
+
       <div class="row">
         <h5>Pick up</h5>
       </div>
@@ -30,10 +33,10 @@
       </div>
       <div class="row">
 
-        <div class="six columns">
+        <!-- <div class="six columns"> -->
           <label for="pickupTimeDate">Pickup Date & Time</label>
           <input type="text" id="newJobPickupTimeDate" class="u-full-width" name="pickupTimeDate" placeholder="select date & time" style="width:100%;" />
-        </div>
+        <!-- </div> -->
 
         <!-- <div class="six columns">
           <label for="noOfPackagesToBeSent">Drop off points</label>
@@ -112,10 +115,17 @@
         </div>
       </div>
 
+      <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key='<%= process.env.pk_MY_PUBLISHABLE_KEY %>'
+        data-image="https://image.freepik.com/free-vector/polygonal-deer-illustration_1043-31.jpg"
+        data-name="REIGNdeer"
+        data-label="Order"
+        data-description="Make payment">
+        </script>
 
-      <input class="button-primary" type="submit" value="Submit">
+        <!-- old submit button replaced by stripe button
+      <input class="button-primary" type="submit" value="Submit"> -->
     </form>
-    <a href="/auth/login"><button type="button">I have an account</button></a>
 
   </div>
 

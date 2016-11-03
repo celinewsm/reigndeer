@@ -1,17 +1,31 @@
 <link rel="stylesheet" href="/css/nav.css">
-<ul class="topnav" id="myTopnav">
-  <li><a href="/">REIGNdeer</a></li>
-  <% if (currentUser) { %>
-    <li><a href="/auth/logout">Logout</a></li>
-    <li><a href="manage">Manage</a></li>
-    <li><a>Hello, <%= currentUser.name %> (<%= currentUser.type %>)</a></li>
-  <% } else { %>
-    <li><a href="/auth/login">Login</a></li>
-    <li><a href="/auth/signup">Signup</a></li>
-  <% } %>
+<nav>
+  <ul class="topnav" id="myTopnav">
+    <li><a href="/">REIGNdeer</a></li>
 
-  <li class="icon">
-    <a href="javascript:void(0);" onclick="expandHamburger()">&#9776;</a>
-  </li>
-</ul>
+
+
+    <% if (currentUser) { %>
+      <li><a href="/auth/logout">Logout</a></li>
+      <% if (currentUser.type === "client") { %>
+        <li><a href="/client/manage">Manage</a></li>
+      <% } else { %>
+        <li><a href="/courier/manage">Manage</a></li>
+      <% } %>
+      <li><a href="/auth/edit">Hello, <%= currentUser.name %> (<%= currentUser.type %>)</a></li>
+    <% } else { %>
+      <li><a href="/auth/login">Login</a></li>
+      <li><a href="/auth/signup">Signup</a></li>
+    <% } %>
+
+
+
+
+
+    <li class="icon">
+      <a href="javascript:void(0);" onclick="expandHamburger()">&#9776;</a>
+    </li>
+
+  </ul>
+</nav>
 <script src="/js/nav.js"></script>

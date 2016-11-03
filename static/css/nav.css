@@ -3,8 +3,8 @@ ul.topnav {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    background-color: #333;
+    /*overflow: hidden;*/
+    /*background-color: #333;*/
 }
 
 /* Float the list items side by side */
@@ -57,4 +57,97 @@ ul.topnav li.icon {display: none;}
     display: block !important;
     text-align: left !important;
   }
+}
+
+
+
+
+nav {
+  background: #222;
+  /*background: red;*/
+  /*height: 50px;*/
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  -webkit-transition: .13s all;
+  transition: .13s all;
+}
+
+/*nav,
+.bg-skew,
+nav ul {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}*/
+
+nav ul {
+  height: 100%;
+  width: 95vw;
+}
+
+nav ul li {
+  height: 100%;
+  list-style: none;
+}
+
+nav li:first-child {
+  margin-right: auto;
+  font-size: 1.6em;
+  font-weight: 600
+}
+
+nav a,
+.content a {
+  -webkit-transition: .3s all;
+  transition: .3s all;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 12px;
+  margin-right: -4px;
+}
+
+nav a:hover {
+  color: tomato;
+}
+
+.content,
+footer,
+nav a {
+  /*color: #fff;*/
+}
+
+.content {
+  padding-top: 160px;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.content p {
+  font-weight: 300;
+  padding-top: 12px;
+}
+
+.content a {
+  font-weight: 400;
+  /*color: #fff;*/
+  padding: 3px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.content a:hover {
+  background: #222;
+  /*color: #fff;*/
+}
+
+.shadow {
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, .6);
 }

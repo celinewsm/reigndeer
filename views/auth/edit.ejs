@@ -1,0 +1,29 @@
+
+<div class="container">
+    <div class="row">
+      <h3 class="top-margin white-font">Update Profile</h3>
+    </div>
+    <form action="/auth/edit" method="POST"class="white-box">
+      <div class="row">
+        <div class="six columns">
+          <label for="editUserName">Name</label>
+          <input class="u-full-width" type="text" name="name" id="editUserName" value=<%= currentUser.name %> >
+        </div>
+        <div class="six columns">
+          <label for="editUserEmail">Email</label>
+          <input class="u-full-width" type="email" name="email" id="editUserEmail" value=<%= currentUser.email %> >
+        </div>
+      </div>
+      <div class="row">
+        <div class="six columns">
+          <label for="editUserMobile">Mobile number</label>
+          <input class="u-full-width" type="number" name="mobile" id="editUserMobile" value=<%= currentUser.mobile %> >
+        </div>
+      </div>
+
+
+      <input class="button-primary" type="submit" value="Submit">
+    </form>
+
+  </div>
+</div>

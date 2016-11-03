@@ -1,9 +1,11 @@
 var express = require('express')
 var db = require('../models')
 // var passport = require('../config/ppConfig')
+var stripe = require('stripe')(process.env.sk_MY_SECRET_KEY);
 var router = express.Router()
 
 var bodyParser = require('body-parser')
+
 router.use(bodyParser.urlencoded({extended: false}))
 
 router.get('/', function (req, res) {
@@ -29,35 +31,54 @@ router.get('/manage', function (req, res) {
 })
 
 router.post('/job/new', function(req, res) {
-  db.job.create({
-    clientId: req.user.id,
-    courierId: null, // to be assigned later
-    status: "Pending", // pending, assigned, enroute to pickup, enroute to deliver, delivered, cancelled
-    itemType: req.body.itemType,
-    itemDescription: req.body.itemDescription,
-    pickupLatitude: req.body.pickupLatitude,
-    pickupLongitude: req.body.pickupLongitude,
-    pickupTimeDate: req.body.pickupTimeDate,
-    pickupAddress: req.body.pickupAddress,
-    pickupPostalCode: req.body.pickupPostalCode,
-    pickupCountryId: 1, // assign first
-    pickupContactName: req.body.pickupContactName,
-    pickupContactNumber: req.body.pickupContactNumber,
-    dropoffLatitude: req.body.dropoffLatitude,
-    dropoffLongitude: req.body.dropoffLongitude,
-    dropoffTimeDate: req.body.dropoffTimeDate,
-    dropoffAddress: req.body.dropoffAddress,
-    dropoffPostalCode: req.body.dropoffPostalCode,
-    dropoffCountryId: 1, // assign first
-    dropoffContactName: req.body.dropoffContactName,
-    dropoffContactNumber: req.body.dropoffContactNumber,
-    courierCurrentLatitude: null, // to be updated when not assigned && not completed
-    courierCurrentLongitude: null,
-    price: req.body.price
-  }).then(function(data) {
-    res.redirect('/client/manage')
-  // you can now access the newly created task via the variable data
-});
+
+
+
+  var stripeToken = req.body.stripeToken;
+  var amount = req.body.price * 100;
+
+  stripe.charges.create({
+      card: stripeToken,
+      currency: 'sgd',
+      amount: amount
+  },
+  function(err, charge) {
+      if (err) {
+          res.redirect('/client/')
+      } else {
+
+        db.job.create({
+          clientId: req.user.id,
+          courierId: null, // to be assigned later
+          status: "Pending", // pending, assigned, enroute to pickup, enroute to deliver, delivered, cancelled
+          itemType: req.body.itemType,
+          itemDescription: req.body.itemDescription,
+          pickupLatitude: req.body.pickupLatitude,
+          pickupLongitude: req.body.pickupLongitude,
+          pickupTimeDate: req.body.pickupTimeDate,
+          pickupAddress: req.body.pickupAddress,
+          pickupPostalCode: req.body.pickupPostalCode,
+          pickupCountryId: 1, // assign first
+          pickupContactName: req.body.pickupContactName,
+          pickupContactNumber: req.body.pickupContactNumber,
+          dropoffLatitude: req.body.dropoffLatitude,
+          dropoffLongitude: req.body.dropoffLongitude,
+          dropoffTimeDate: req.body.dropoffTimeDate,
+          dropoffAddress: req.body.dropoffAddress,
+          dropoffPostalCode: req.body.dropoffPostalCode,
+          dropoffCountryId: 1, // assign first
+          dropoffContactName: req.body.dropoffContactName,
+          dropoffContactNumber: req.body.dropoffContactNumber,
+          courierCurrentLatitude: null, // to be updated when not assigned && not completed
+          courierCurrentLongitude: null,
+          price: req.body.price
+        }).then(function(data) {
+          res.redirect('/client/manage')
+        // you can now access the newly created task via the variable data
+      });
+
+      }
+  });
 
 
 
