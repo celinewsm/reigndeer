@@ -57,19 +57,19 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 34);
 	
-	var _socket = __webpack_require__(/*! socket.io-client */ 173);
+	var _socket = __webpack_require__(/*! socket.io-client */ 172);
 	
 	var _socket2 = _interopRequireDefault(_socket);
 	
-	var _ClientManage = __webpack_require__(/*! ./ClientManage.jsx */ 172);
+	var _ClientManage = __webpack_require__(/*! ./ClientManage.jsx */ 221);
 	
 	var _ClientManage2 = _interopRequireDefault(_ClientManage);
 	
-	var _CourierJobsListing = __webpack_require__(/*! ./CourierJobsListing.jsx */ 223);
+	var _CourierJobsListing = __webpack_require__(/*! ./CourierJobsListing.jsx */ 222);
 	
 	var _CourierJobsListing2 = _interopRequireDefault(_CourierJobsListing);
 	
-	var _CourierManageJobs = __webpack_require__(/*! ./CourierManageJobs.jsx */ 224);
+	var _CourierManageJobs = __webpack_require__(/*! ./CourierManageJobs.jsx */ 223);
 	
 	var _CourierManageJobs2 = _interopRequireDefault(_CourierManageJobs);
 	
@@ -82,6 +82,10 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var socket = (0, _socket2.default)(window.location.host);
+	
+	// import TestMap from './TestMap.jsx';
+	// import ClientLiveMap from './ClientLiveMap.jsx';
+	
 	
 	var App = function (_React$Component) {
 	  _inherits(App, _React$Component);
@@ -21992,730 +21996,6 @@
 
 /***/ },
 /* 172 */
-/*!*******************************************!*\
-  !*** ./react/components/ClientManage.jsx ***!
-  \*******************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactDom = __webpack_require__(/*! react-dom */ 34);
-	
-	var _socket = __webpack_require__(/*! socket.io-client */ 173);
-	
-	var _socket2 = _interopRequireDefault(_socket);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var socket = (0, _socket2.default)(window.location.host);
-	
-	var ClientManage = _react2.default.createClass({
-	  displayName: 'ClientManage',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      initialJobs: jobsCreatedByUser,
-	      jobs: []
-	    };
-	  },
-	  componentWillMount: function componentWillMount() {
-	    this.setState({ jobs: this.state.initialJobs });
-	  },
-	  componentDidMount: function componentDidMount() {
-	    socket.emit('client join channels', currentUserClient.id);
-	    socket.on('courier accepted client job', this.courierUpdatesJob);
-	    socket.on('courier updated status and/or position', this.courierUpdatesJob);
-	  },
-	  courierUpdatesJob: function courierUpdatesJob(job) {
-	    console.log("courierUpdateJob data:", job);
-	
-	    for (var i in this.state.jobs) {
-	      if (this.state.jobs[i].id === job.id) {
-	        var jobs = this.state.jobs;
-	        jobs[i] = job, this.setState({
-	          jobs: jobs
-	        });
-	        break;
-	      }
-	    }
-	  },
-	  clientUpdateJob: function clientUpdateJob(jobId, updatedJob) {
-	
-	    for (var i in this.state.jobs) {
-	      if (this.state.jobs[i].id === jobId) {
-	        var jobs = this.state.jobs;
-	
-	        jobs[i].pickupContactNumber = updatedJob.pickupContactNumber, jobs[i].pickupContactName = updatedJob.pickupContactName, jobs[i].dropoffContactNumber = updatedJob.dropoffContactNumber, jobs[i].dropoffContactName = updatedJob.dropoffContactName, this.setState({
-	          jobs: jobs
-	        });
-	
-	        socket.emit('client updates job', updatedJob);
-	
-	        break;
-	      }
-	    }
-	  },
-	  cancelJob: function cancelJob(jobId) {
-	    for (var i = 0; i < this.state.jobs.length; i++) {
-	      if (this.state.jobs[i].id === jobId) {
-	        var jobs = this.state.jobs;
-	        jobs.splice(i, 1);
-	        this.setState({
-	          jobs: jobs
-	        });
-	        socket.emit('client cancels job', jobId);
-	      }
-	    }
-	  },
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      { className: 'container' },
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'row text-align-center' },
-	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          'Jobs ordered'
-	        )
-	      ),
-	      this.state.jobs.map(function (job) {
-	        return _react2.default.createElement(Job, { key: job.id, job: job, clientUpdateJob: this.clientUpdateJob, cancelJob: this.cancelJob });
-	      }.bind(this))
-	    );
-	  }
-	});
-	
-	var Job = _react2.default.createClass({
-	  displayName: 'Job',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      id: this.props.job.id,
-	      clientId: this.props.job.clientId,
-	      courierId: this.props.job.courierId,
-	      courierDetails: this.props.job.courierDetails,
-	      status: this.props.job.status, // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
-	      itemType: this.props.job.itemType,
-	      itemDescription: this.props.job.itemDescription,
-	      pickupLatitude: this.props.job.pickupLatitude,
-	      pickupLongitude: this.props.job.pickupLongitude,
-	      pickupTimeDate: this.props.job.pickupTimeDate,
-	      pickupAddress: this.props.job.pickupAddress,
-	      pickupPostalCode: this.props.job.pickupPostalCode,
-	      pickupCountryId: this.props.job.pickupCountryId, // assign first
-	      pickupContactName: this.props.job.pickupContactName,
-	      pickupContactNumber: this.props.job.pickupContactNumber,
-	      dropoffLatitude: this.props.job.dropoffLatitude,
-	      dropoffLongitude: this.props.job.dropoffLongitude,
-	      dropoffTimeDate: this.props.job.dropoffTimeDate,
-	      dropoffAddress: this.props.job.dropoffAddress,
-	      dropoffPostalCode: this.props.job.dropoffPostalCode,
-	      dropoffCountryId: this.props.job.dropoffCountryId, // assign first
-	      dropoffContactName: this.props.job.dropoffContactName,
-	      dropoffContactNumber: this.props.job.dropoffContactNumber,
-	      courierCurrentLatitude: this.props.job.courierCurrentLatitude, // to be updated when not assigned && not completed
-	      courierCurrentLongitude: this.props.job.courierCurrentLongitude,
-	      price: this.props.job.price,
-	      editing: false
-	    };
-	  },
-	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-	    this.setState(nextProps.job);
-	  },
-	  toggleEdit: function toggleEdit() {
-	    if (this.state.editing) {
-	      this.setState({
-	        editing: false
-	      });
-	    } else {
-	      this.setState({
-	        editing: true
-	      });
-	    }
-	  },
-	  saveState: function saveState() {
-	    var updatedJob = {
-	      id: this.state.id,
-	      pickupContactNumber: $("#editPickupContactNumber").val(),
-	      pickupContactName: $("#editPickupContactName").val(),
-	      dropoffContactNumber: $("#editDropoffContactNumber").val(),
-	      dropoffContactName: $("#editDropoffContactName").val(),
-	      editing: false
-	    };
-	    this.setState(updatedJob);
-	    this.props.clientUpdateJob(this.state.id, updatedJob);
-	  },
-	  acceptedByCourier: function acceptedByCourier() {
-	    if (this.state.courierDetails !== null) {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'ten columns offset-by-one' },
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          this.state.courierDetails.name,
-	          ' will be making the delivery and can be contacted at ',
-	          this.state.courierDetails.mobile,
-	          '.'
-	        )
-	      );
-	    }
-	  },
-	  render: function render() {
-	    var _this = this;
-	
-	    if (!this.state.editing) {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'row', style: { "border": "1px solid black",
-	            "padding": "1em",
-	            "marginBottom": "1.5em" } },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'five columns offset-by-one' },
-	            _react2.default.createElement(
-	              'h5',
-	              null,
-	              'JobID:1300',
-	              this.state.id,
-	              ' | Status:',
-	              this.state.status
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'five columns text-align-right' },
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'button', name: 'button', onClick: function onClick() {
-	                  return _this.toggleEdit();
-	                } },
-	              'Edit'
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'button', name: 'button', onClick: function onClick() {
-	                  return _this.props.cancelJob(_this.state.id);
-	                } },
-	              'Cancel'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'five columns offset-by-one' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'h5',
-	                null,
-	                'Pickup'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Name'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.pickupContactName
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Contact'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.pickupContactNumber
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Address'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.pickupAddress,
-	                ', ',
-	                _react2.default.createElement('br', null),
-	                'Singapore ',
-	                this.state.pickupPostalCode
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Date'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.pickupTimeDate.slice(0, 10)
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Time'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                _react2.default.createElement(
-	                  'p',
-	                  null,
-	                  this.state.pickupTimeDate.slice(11, 16)
-	                )
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'five columns' },
-	            _react2.default.createElement(
-	              'h5',
-	              null,
-	              'Dropoff'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Name'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.dropoffContactName
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Contact'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.dropoffContactNumber
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Address'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.dropoffAddress,
-	                ', ',
-	                _react2.default.createElement('br', null),
-	                'Singapore ',
-	                this.state.dropoffPostalCode
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Date'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.dropoffTimeDate.slice(0, 10)
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Time'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                _react2.default.createElement(
-	                  'p',
-	                  null,
-	                  this.state.dropoffTimeDate.slice(11, 16)
-	                )
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            this.acceptedByCourier()
-	          )
-	        )
-	      );
-	    } else {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'row', style: { "border": "1px solid black",
-	            "padding": "1em",
-	            "marginBottom": "1.5em" } },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'five columns offset-by-one' },
-	            _react2.default.createElement(
-	              'h5',
-	              null,
-	              'JobID:1300',
-	              this.state.id,
-	              ' | Status:',
-	              this.state.status
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'five columns text-align-right' },
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'button', name: 'button', onClick: function onClick() {
-	                  return _this.saveState();
-	                } },
-	              'Save'
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'button', name: 'button', onClick: function onClick() {
-	                  return _this.toggleEdit();
-	                } },
-	              'Close Edit'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'five columns offset-by-one' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'h5',
-	                null,
-	                'Pickup'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Name'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                _react2.default.createElement('input', { type: 'text', id: 'editPickupContactName', defaultValue: this.state.pickupContactName })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Contact'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                _react2.default.createElement('input', { type: 'text', id: 'editPickupContactNumber', defaultValue: this.state.pickupContactNumber })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Address'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.pickupAddress,
-	                ', ',
-	                _react2.default.createElement('br', null),
-	                'Singapore ',
-	                this.state.pickupPostalCode
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Date'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.pickupTimeDate.slice(0, 10)
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Time'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                _react2.default.createElement(
-	                  'p',
-	                  null,
-	                  this.state.pickupTimeDate.slice(11, 16)
-	                )
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'five columns' },
-	            _react2.default.createElement(
-	              'h5',
-	              null,
-	              'Dropoff'
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Name'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                _react2.default.createElement('input', { type: 'text', id: 'editDropoffContactName', defaultValue: this.state.dropoffContactName })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Contact'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                _react2.default.createElement('input', { type: 'text', id: 'editDropoffContactNumber', defaultValue: this.state.dropoffContactNumber })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Address'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.dropoffAddress,
-	                ', ',
-	                _react2.default.createElement('br', null),
-	                'Singapore ',
-	                this.state.dropoffPostalCode
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Date'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                this.state.dropoffTimeDate.slice(0, 10)
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'row' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'three columns' },
-	                _react2.default.createElement(
-	                  'strong',
-	                  null,
-	                  'Time'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nine columns' },
-	                _react2.default.createElement(
-	                  'p',
-	                  null,
-	                  this.state.dropoffTimeDate.slice(11, 16)
-	                )
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            this.acceptedByCourier()
-	          )
-	        )
-	      );
-	    }
-	  }
-	});
-	
-	if (document.getElementById('clientManage') !== null) {
-	  (0, _reactDom.render)(_react2.default.createElement(ClientManage, null), document.getElementById('clientManage'));
-	}
-
-/***/ },
-/* 173 */
 /*!*****************************************!*\
   !*** ./~/socket.io-client/lib/index.js ***!
   \*****************************************/
@@ -22726,10 +22006,10 @@
 	 * Module dependencies.
 	 */
 	
-	var url = __webpack_require__(/*! ./url */ 174);
-	var parser = __webpack_require__(/*! socket.io-parser */ 179);
-	var Manager = __webpack_require__(/*! ./manager */ 187);
-	var debug = __webpack_require__(/*! debug */ 176)('socket.io-client');
+	var url = __webpack_require__(/*! ./url */ 173);
+	var parser = __webpack_require__(/*! socket.io-parser */ 178);
+	var Manager = __webpack_require__(/*! ./manager */ 186);
+	var debug = __webpack_require__(/*! debug */ 175)('socket.io-client');
 	
 	/**
 	 * Module exports.
@@ -22828,12 +22108,12 @@
 	 * @api public
 	 */
 	
-	exports.Manager = __webpack_require__(/*! ./manager */ 187);
-	exports.Socket = __webpack_require__(/*! ./socket */ 214);
+	exports.Manager = __webpack_require__(/*! ./manager */ 186);
+	exports.Socket = __webpack_require__(/*! ./socket */ 213);
 
 
 /***/ },
-/* 174 */
+/* 173 */
 /*!***************************************!*\
   !*** ./~/socket.io-client/lib/url.js ***!
   \***************************************/
@@ -22844,8 +22124,8 @@
 	 * Module dependencies.
 	 */
 	
-	var parseuri = __webpack_require__(/*! parseuri */ 175);
-	var debug = __webpack_require__(/*! debug */ 176)('socket.io-client:url');
+	var parseuri = __webpack_require__(/*! parseuri */ 174);
+	var debug = __webpack_require__(/*! debug */ 175)('socket.io-client:url');
 	
 	/**
 	 * Module exports.
@@ -22918,7 +22198,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 175 */
+/* 174 */
 /*!*****************************!*\
   !*** ./~/parseuri/index.js ***!
   \*****************************/
@@ -22966,7 +22246,7 @@
 
 
 /***/ },
-/* 176 */
+/* 175 */
 /*!****************************!*\
   !*** ./~/debug/browser.js ***!
   \****************************/
@@ -22979,7 +22259,7 @@
 	 * Expose `debug()` as the module.
 	 */
 	
-	exports = module.exports = __webpack_require__(/*! ./debug */ 177);
+	exports = module.exports = __webpack_require__(/*! ./debug */ 176);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -23143,7 +22423,7 @@
 
 
 /***/ },
-/* 177 */
+/* 176 */
 /*!**************************!*\
   !*** ./~/debug/debug.js ***!
   \**************************/
@@ -23162,7 +22442,7 @@
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(/*! ms */ 178);
+	exports.humanize = __webpack_require__(/*! ms */ 177);
 	
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -23349,7 +22629,7 @@
 
 
 /***/ },
-/* 178 */
+/* 177 */
 /*!***********************!*\
   !*** ./~/ms/index.js ***!
   \***********************/
@@ -23483,7 +22763,7 @@
 
 
 /***/ },
-/* 179 */
+/* 178 */
 /*!*************************************!*\
   !*** ./~/socket.io-parser/index.js ***!
   \*************************************/
@@ -23494,11 +22774,11 @@
 	 * Module dependencies.
 	 */
 	
-	var debug = __webpack_require__(/*! debug */ 176)('socket.io-parser');
-	var json = __webpack_require__(/*! json3 */ 180);
-	var Emitter = __webpack_require__(/*! component-emitter */ 183);
-	var binary = __webpack_require__(/*! ./binary */ 184);
-	var isBuf = __webpack_require__(/*! ./is-buffer */ 186);
+	var debug = __webpack_require__(/*! debug */ 175)('socket.io-parser');
+	var json = __webpack_require__(/*! json3 */ 179);
+	var Emitter = __webpack_require__(/*! component-emitter */ 182);
+	var binary = __webpack_require__(/*! ./binary */ 183);
+	var isBuf = __webpack_require__(/*! ./is-buffer */ 185);
 	
 	/**
 	 * Protocol version.
@@ -23896,7 +23176,7 @@
 
 
 /***/ },
-/* 180 */
+/* 179 */
 /*!*************************************************!*\
   !*** ./~/socket.io-parser/~/json3/lib/json3.js ***!
   \*************************************************/
@@ -23906,7 +23186,7 @@
 	;(function () {
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(/*! !webpack amd options */ 182);
+	  var isLoader = "function" === "function" && __webpack_require__(/*! !webpack amd options */ 181);
 	
 	  // A set of types used to distinguish objects from primitives.
 	  var objectTypes = {
@@ -24805,10 +24085,10 @@
 	  }
 	}).call(this);
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../webpack/buildin/module.js */ 181)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../../webpack/buildin/module.js */ 180)(module), (function() { return this; }())))
 
 /***/ },
-/* 181 */
+/* 180 */
 /*!***********************************!*\
   !*** (webpack)/buildin/module.js ***!
   \***********************************/
@@ -24827,7 +24107,7 @@
 
 
 /***/ },
-/* 182 */
+/* 181 */
 /*!****************************************!*\
   !*** (webpack)/buildin/amd-options.js ***!
   \****************************************/
@@ -24838,7 +24118,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 183 */
+/* 182 */
 /*!**************************************!*\
   !*** ./~/component-emitter/index.js ***!
   \**************************************/
@@ -25011,7 +24291,7 @@
 
 
 /***/ },
-/* 184 */
+/* 183 */
 /*!**************************************!*\
   !*** ./~/socket.io-parser/binary.js ***!
   \**************************************/
@@ -25023,8 +24303,8 @@
 	 * Module requirements
 	 */
 	
-	var isArray = __webpack_require__(/*! isarray */ 185);
-	var isBuf = __webpack_require__(/*! ./is-buffer */ 186);
+	var isArray = __webpack_require__(/*! isarray */ 184);
+	var isBuf = __webpack_require__(/*! ./is-buffer */ 185);
 	
 	/**
 	 * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
@@ -25162,7 +24442,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 185 */
+/* 184 */
 /*!***********************************************!*\
   !*** ./~/socket.io-parser/~/isarray/index.js ***!
   \***********************************************/
@@ -25174,7 +24454,7 @@
 
 
 /***/ },
-/* 186 */
+/* 185 */
 /*!*****************************************!*\
   !*** ./~/socket.io-parser/is-buffer.js ***!
   \*****************************************/
@@ -25197,7 +24477,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 187 */
+/* 186 */
 /*!*******************************************!*\
   !*** ./~/socket.io-client/lib/manager.js ***!
   \*******************************************/
@@ -25208,15 +24488,15 @@
 	 * Module dependencies.
 	 */
 	
-	var eio = __webpack_require__(/*! engine.io-client */ 188);
-	var Socket = __webpack_require__(/*! ./socket */ 214);
-	var Emitter = __webpack_require__(/*! component-emitter */ 215);
-	var parser = __webpack_require__(/*! socket.io-parser */ 179);
-	var on = __webpack_require__(/*! ./on */ 217);
-	var bind = __webpack_require__(/*! component-bind */ 218);
-	var debug = __webpack_require__(/*! debug */ 176)('socket.io-client:manager');
-	var indexOf = __webpack_require__(/*! indexof */ 212);
-	var Backoff = __webpack_require__(/*! backo2 */ 221);
+	var eio = __webpack_require__(/*! engine.io-client */ 187);
+	var Socket = __webpack_require__(/*! ./socket */ 213);
+	var Emitter = __webpack_require__(/*! component-emitter */ 214);
+	var parser = __webpack_require__(/*! socket.io-parser */ 178);
+	var on = __webpack_require__(/*! ./on */ 216);
+	var bind = __webpack_require__(/*! component-bind */ 217);
+	var debug = __webpack_require__(/*! debug */ 175)('socket.io-client:manager');
+	var indexOf = __webpack_require__(/*! indexof */ 211);
+	var Backoff = __webpack_require__(/*! backo2 */ 220);
 	
 	/**
 	 * IE6+ hasOwnProperty
@@ -25766,25 +25046,25 @@
 
 
 /***/ },
-/* 188 */
+/* 187 */
 /*!*************************************!*\
   !*** ./~/engine.io-client/index.js ***!
   \*************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(/*! ./lib/index */ 189);
+	module.exports = __webpack_require__(/*! ./lib/index */ 188);
 
 
 /***/ },
-/* 189 */
+/* 188 */
 /*!*****************************************!*\
   !*** ./~/engine.io-client/lib/index.js ***!
   \*****************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(/*! ./socket */ 190);
+	module.exports = __webpack_require__(/*! ./socket */ 189);
 	
 	/**
 	 * Exports parser
@@ -25792,11 +25072,11 @@
 	 * @api public
 	 *
 	 */
-	module.exports.parser = __webpack_require__(/*! engine.io-parser */ 197);
+	module.exports.parser = __webpack_require__(/*! engine.io-parser */ 196);
 
 
 /***/ },
-/* 190 */
+/* 189 */
 /*!******************************************!*\
   !*** ./~/engine.io-client/lib/socket.js ***!
   \******************************************/
@@ -25806,14 +25086,14 @@
 	 * Module dependencies.
 	 */
 	
-	var transports = __webpack_require__(/*! ./transports/index */ 191);
-	var Emitter = __webpack_require__(/*! component-emitter */ 183);
-	var debug = __webpack_require__(/*! debug */ 176)('engine.io-client:socket');
-	var index = __webpack_require__(/*! indexof */ 212);
-	var parser = __webpack_require__(/*! engine.io-parser */ 197);
-	var parseuri = __webpack_require__(/*! parseuri */ 175);
-	var parsejson = __webpack_require__(/*! parsejson */ 213);
-	var parseqs = __webpack_require__(/*! parseqs */ 206);
+	var transports = __webpack_require__(/*! ./transports/index */ 190);
+	var Emitter = __webpack_require__(/*! component-emitter */ 182);
+	var debug = __webpack_require__(/*! debug */ 175)('engine.io-client:socket');
+	var index = __webpack_require__(/*! indexof */ 211);
+	var parser = __webpack_require__(/*! engine.io-parser */ 196);
+	var parseuri = __webpack_require__(/*! parseuri */ 174);
+	var parsejson = __webpack_require__(/*! parsejson */ 212);
+	var parseqs = __webpack_require__(/*! parseqs */ 205);
 	
 	/**
 	 * Module exports.
@@ -25940,9 +25220,9 @@
 	 */
 	
 	Socket.Socket = Socket;
-	Socket.Transport = __webpack_require__(/*! ./transport */ 196);
-	Socket.transports = __webpack_require__(/*! ./transports/index */ 191);
-	Socket.parser = __webpack_require__(/*! engine.io-parser */ 197);
+	Socket.Transport = __webpack_require__(/*! ./transport */ 195);
+	Socket.transports = __webpack_require__(/*! ./transports/index */ 190);
+	Socket.parser = __webpack_require__(/*! engine.io-parser */ 196);
 	
 	/**
 	 * Creates transport of the given type.
@@ -26537,7 +25817,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 191 */
+/* 190 */
 /*!****************************************************!*\
   !*** ./~/engine.io-client/lib/transports/index.js ***!
   \****************************************************/
@@ -26547,10 +25827,10 @@
 	 * Module dependencies
 	 */
 	
-	var XMLHttpRequest = __webpack_require__(/*! xmlhttprequest-ssl */ 192);
-	var XHR = __webpack_require__(/*! ./polling-xhr */ 194);
-	var JSONP = __webpack_require__(/*! ./polling-jsonp */ 209);
-	var websocket = __webpack_require__(/*! ./websocket */ 210);
+	var XMLHttpRequest = __webpack_require__(/*! xmlhttprequest-ssl */ 191);
+	var XHR = __webpack_require__(/*! ./polling-xhr */ 193);
+	var JSONP = __webpack_require__(/*! ./polling-jsonp */ 208);
+	var websocket = __webpack_require__(/*! ./websocket */ 209);
 	
 	/**
 	 * Export transports.
@@ -26600,7 +25880,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 192 */
+/* 191 */
 /*!**************************************************!*\
   !*** ./~/engine.io-client/lib/xmlhttprequest.js ***!
   \**************************************************/
@@ -26608,7 +25888,7 @@
 
 	/* WEBPACK VAR INJECTION */(function(global) {// browser shim for xmlhttprequest module
 	
-	var hasCORS = __webpack_require__(/*! has-cors */ 193);
+	var hasCORS = __webpack_require__(/*! has-cors */ 192);
 	
 	module.exports = function (opts) {
 	  var xdomain = opts.xdomain;
@@ -26647,7 +25927,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 193 */
+/* 192 */
 /*!*****************************!*\
   !*** ./~/has-cors/index.js ***!
   \*****************************/
@@ -26673,7 +25953,7 @@
 
 
 /***/ },
-/* 194 */
+/* 193 */
 /*!**********************************************************!*\
   !*** ./~/engine.io-client/lib/transports/polling-xhr.js ***!
   \**********************************************************/
@@ -26683,11 +25963,11 @@
 	 * Module requirements.
 	 */
 	
-	var XMLHttpRequest = __webpack_require__(/*! xmlhttprequest-ssl */ 192);
-	var Polling = __webpack_require__(/*! ./polling */ 195);
-	var Emitter = __webpack_require__(/*! component-emitter */ 183);
-	var inherit = __webpack_require__(/*! component-inherit */ 207);
-	var debug = __webpack_require__(/*! debug */ 176)('engine.io-client:polling-xhr');
+	var XMLHttpRequest = __webpack_require__(/*! xmlhttprequest-ssl */ 191);
+	var Polling = __webpack_require__(/*! ./polling */ 194);
+	var Emitter = __webpack_require__(/*! component-emitter */ 182);
+	var inherit = __webpack_require__(/*! component-inherit */ 206);
+	var debug = __webpack_require__(/*! debug */ 175)('engine.io-client:polling-xhr');
 	
 	/**
 	 * Module exports.
@@ -27100,7 +26380,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 195 */
+/* 194 */
 /*!******************************************************!*\
   !*** ./~/engine.io-client/lib/transports/polling.js ***!
   \******************************************************/
@@ -27110,12 +26390,12 @@
 	 * Module dependencies.
 	 */
 	
-	var Transport = __webpack_require__(/*! ../transport */ 196);
-	var parseqs = __webpack_require__(/*! parseqs */ 206);
-	var parser = __webpack_require__(/*! engine.io-parser */ 197);
-	var inherit = __webpack_require__(/*! component-inherit */ 207);
-	var yeast = __webpack_require__(/*! yeast */ 208);
-	var debug = __webpack_require__(/*! debug */ 176)('engine.io-client:polling');
+	var Transport = __webpack_require__(/*! ../transport */ 195);
+	var parseqs = __webpack_require__(/*! parseqs */ 205);
+	var parser = __webpack_require__(/*! engine.io-parser */ 196);
+	var inherit = __webpack_require__(/*! component-inherit */ 206);
+	var yeast = __webpack_require__(/*! yeast */ 207);
+	var debug = __webpack_require__(/*! debug */ 175)('engine.io-client:polling');
 	
 	/**
 	 * Module exports.
@@ -27128,7 +26408,7 @@
 	 */
 	
 	var hasXHR2 = (function () {
-	  var XMLHttpRequest = __webpack_require__(/*! xmlhttprequest-ssl */ 192);
+	  var XMLHttpRequest = __webpack_require__(/*! xmlhttprequest-ssl */ 191);
 	  var xhr = new XMLHttpRequest({ xdomain: false });
 	  return null != xhr.responseType;
 	})();
@@ -27354,7 +26634,7 @@
 
 
 /***/ },
-/* 196 */
+/* 195 */
 /*!*********************************************!*\
   !*** ./~/engine.io-client/lib/transport.js ***!
   \*********************************************/
@@ -27364,8 +26644,8 @@
 	 * Module dependencies.
 	 */
 	
-	var parser = __webpack_require__(/*! engine.io-parser */ 197);
-	var Emitter = __webpack_require__(/*! component-emitter */ 183);
+	var parser = __webpack_require__(/*! engine.io-parser */ 196);
+	var Emitter = __webpack_require__(/*! component-emitter */ 182);
 	
 	/**
 	 * Module exports.
@@ -27518,7 +26798,7 @@
 
 
 /***/ },
-/* 197 */
+/* 196 */
 /*!*******************************************!*\
   !*** ./~/engine.io-parser/lib/browser.js ***!
   \*******************************************/
@@ -27528,15 +26808,15 @@
 	 * Module dependencies.
 	 */
 	
-	var keys = __webpack_require__(/*! ./keys */ 198);
-	var hasBinary = __webpack_require__(/*! has-binary */ 199);
-	var sliceBuffer = __webpack_require__(/*! arraybuffer.slice */ 201);
-	var after = __webpack_require__(/*! after */ 202);
-	var utf8 = __webpack_require__(/*! wtf-8 */ 203);
+	var keys = __webpack_require__(/*! ./keys */ 197);
+	var hasBinary = __webpack_require__(/*! has-binary */ 198);
+	var sliceBuffer = __webpack_require__(/*! arraybuffer.slice */ 200);
+	var after = __webpack_require__(/*! after */ 201);
+	var utf8 = __webpack_require__(/*! wtf-8 */ 202);
 	
 	var base64encoder;
 	if (global && global.ArrayBuffer) {
-	  base64encoder = __webpack_require__(/*! base64-arraybuffer */ 204);
+	  base64encoder = __webpack_require__(/*! base64-arraybuffer */ 203);
 	}
 	
 	/**
@@ -27594,7 +26874,7 @@
 	 * Create a blob api even for blob builder when vendor prefixes exist
 	 */
 	
-	var Blob = __webpack_require__(/*! blob */ 205);
+	var Blob = __webpack_require__(/*! blob */ 204);
 	
 	/**
 	 * Encodes a packet.
@@ -28137,7 +27417,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 198 */
+/* 197 */
 /*!****************************************!*\
   !*** ./~/engine.io-parser/lib/keys.js ***!
   \****************************************/
@@ -28165,7 +27445,7 @@
 
 
 /***/ },
-/* 199 */
+/* 198 */
 /*!**************************************************!*\
   !*** ./~/engine.io-parser/~/has-binary/index.js ***!
   \**************************************************/
@@ -28176,7 +27456,7 @@
 	 * Module requirements.
 	 */
 	
-	var isArray = __webpack_require__(/*! isarray */ 200);
+	var isArray = __webpack_require__(/*! isarray */ 199);
 	
 	/**
 	 * Module exports.
@@ -28233,7 +27513,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 200 */
+/* 199 */
 /*!***********************************************!*\
   !*** ./~/engine.io-parser/~/isarray/index.js ***!
   \***********************************************/
@@ -28245,7 +27525,7 @@
 
 
 /***/ },
-/* 201 */
+/* 200 */
 /*!**************************************!*\
   !*** ./~/arraybuffer.slice/index.js ***!
   \**************************************/
@@ -28283,7 +27563,7 @@
 
 
 /***/ },
-/* 202 */
+/* 201 */
 /*!**************************!*\
   !*** ./~/after/index.js ***!
   \**************************/
@@ -28320,7 +27600,7 @@
 
 
 /***/ },
-/* 203 */
+/* 202 */
 /*!**************************!*\
   !*** ./~/wtf-8/wtf-8.js ***!
   \**************************/
@@ -28559,10 +27839,10 @@
 	
 	}(this));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../webpack/buildin/module.js */ 181)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../webpack/buildin/module.js */ 180)(module), (function() { return this; }())))
 
 /***/ },
-/* 204 */
+/* 203 */
 /*!********************************************************!*\
   !*** ./~/base64-arraybuffer/lib/base64-arraybuffer.js ***!
   \********************************************************/
@@ -28638,7 +27918,7 @@
 
 
 /***/ },
-/* 205 */
+/* 204 */
 /*!*************************!*\
   !*** ./~/blob/index.js ***!
   \*************************/
@@ -28744,7 +28024,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 206 */
+/* 205 */
 /*!****************************!*\
   !*** ./~/parseqs/index.js ***!
   \****************************/
@@ -28790,7 +28070,7 @@
 
 
 /***/ },
-/* 207 */
+/* 206 */
 /*!**************************************!*\
   !*** ./~/component-inherit/index.js ***!
   \**************************************/
@@ -28805,7 +28085,7 @@
 	};
 
 /***/ },
-/* 208 */
+/* 207 */
 /*!**************************!*\
   !*** ./~/yeast/index.js ***!
   \**************************/
@@ -28882,7 +28162,7 @@
 
 
 /***/ },
-/* 209 */
+/* 208 */
 /*!************************************************************!*\
   !*** ./~/engine.io-client/lib/transports/polling-jsonp.js ***!
   \************************************************************/
@@ -28893,8 +28173,8 @@
 	 * Module requirements.
 	 */
 	
-	var Polling = __webpack_require__(/*! ./polling */ 195);
-	var inherit = __webpack_require__(/*! component-inherit */ 207);
+	var Polling = __webpack_require__(/*! ./polling */ 194);
+	var inherit = __webpack_require__(/*! component-inherit */ 206);
 	
 	/**
 	 * Module exports.
@@ -29123,7 +28403,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 210 */
+/* 209 */
 /*!********************************************************!*\
   !*** ./~/engine.io-client/lib/transports/websocket.js ***!
   \********************************************************/
@@ -29133,12 +28413,12 @@
 	 * Module dependencies.
 	 */
 	
-	var Transport = __webpack_require__(/*! ../transport */ 196);
-	var parser = __webpack_require__(/*! engine.io-parser */ 197);
-	var parseqs = __webpack_require__(/*! parseqs */ 206);
-	var inherit = __webpack_require__(/*! component-inherit */ 207);
-	var yeast = __webpack_require__(/*! yeast */ 208);
-	var debug = __webpack_require__(/*! debug */ 176)('engine.io-client:websocket');
+	var Transport = __webpack_require__(/*! ../transport */ 195);
+	var parser = __webpack_require__(/*! engine.io-parser */ 196);
+	var parseqs = __webpack_require__(/*! parseqs */ 205);
+	var inherit = __webpack_require__(/*! component-inherit */ 206);
+	var yeast = __webpack_require__(/*! yeast */ 207);
+	var debug = __webpack_require__(/*! debug */ 175)('engine.io-client:websocket');
 	var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
 	
 	/**
@@ -29150,7 +28430,7 @@
 	var WebSocket = BrowserWebSocket;
 	if (!WebSocket && typeof window === 'undefined') {
 	  try {
-	    WebSocket = __webpack_require__(/*! ws */ 211);
+	    WebSocket = __webpack_require__(/*! ws */ 210);
 	  } catch (e) { }
 	}
 	
@@ -29407,7 +28687,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 211 */
+/* 210 */
 /*!********************!*\
   !*** ws (ignored) ***!
   \********************/
@@ -29416,7 +28696,7 @@
 	/* (ignored) */
 
 /***/ },
-/* 212 */
+/* 211 */
 /*!****************************!*\
   !*** ./~/indexof/index.js ***!
   \****************************/
@@ -29434,7 +28714,7 @@
 	};
 
 /***/ },
-/* 213 */
+/* 212 */
 /*!******************************!*\
   !*** ./~/parsejson/index.js ***!
   \******************************/
@@ -29475,7 +28755,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 214 */
+/* 213 */
 /*!******************************************!*\
   !*** ./~/socket.io-client/lib/socket.js ***!
   \******************************************/
@@ -29486,13 +28766,13 @@
 	 * Module dependencies.
 	 */
 	
-	var parser = __webpack_require__(/*! socket.io-parser */ 179);
-	var Emitter = __webpack_require__(/*! component-emitter */ 215);
-	var toArray = __webpack_require__(/*! to-array */ 216);
-	var on = __webpack_require__(/*! ./on */ 217);
-	var bind = __webpack_require__(/*! component-bind */ 218);
-	var debug = __webpack_require__(/*! debug */ 176)('socket.io-client:socket');
-	var hasBin = __webpack_require__(/*! has-binary */ 219);
+	var parser = __webpack_require__(/*! socket.io-parser */ 178);
+	var Emitter = __webpack_require__(/*! component-emitter */ 214);
+	var toArray = __webpack_require__(/*! to-array */ 215);
+	var on = __webpack_require__(/*! ./on */ 216);
+	var bind = __webpack_require__(/*! component-bind */ 217);
+	var debug = __webpack_require__(/*! debug */ 175)('socket.io-client:socket');
+	var hasBin = __webpack_require__(/*! has-binary */ 218);
 	
 	/**
 	 * Module exports.
@@ -29903,7 +29183,7 @@
 
 
 /***/ },
-/* 215 */
+/* 214 */
 /*!*********************************************************!*\
   !*** ./~/socket.io-client/~/component-emitter/index.js ***!
   \*********************************************************/
@@ -30073,7 +29353,7 @@
 
 
 /***/ },
-/* 216 */
+/* 215 */
 /*!*****************************!*\
   !*** ./~/to-array/index.js ***!
   \*****************************/
@@ -30095,7 +29375,7 @@
 
 
 /***/ },
-/* 217 */
+/* 216 */
 /*!**************************************!*\
   !*** ./~/socket.io-client/lib/on.js ***!
   \**************************************/
@@ -30128,7 +29408,7 @@
 
 
 /***/ },
-/* 218 */
+/* 217 */
 /*!***********************************!*\
   !*** ./~/component-bind/index.js ***!
   \***********************************/
@@ -30160,7 +29440,7 @@
 
 
 /***/ },
-/* 219 */
+/* 218 */
 /*!*******************************!*\
   !*** ./~/has-binary/index.js ***!
   \*******************************/
@@ -30171,7 +29451,7 @@
 	 * Module requirements.
 	 */
 	
-	var isArray = __webpack_require__(/*! isarray */ 220);
+	var isArray = __webpack_require__(/*! isarray */ 219);
 	
 	/**
 	 * Module exports.
@@ -30229,7 +29509,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 220 */
+/* 219 */
 /*!*****************************************!*\
   !*** ./~/has-binary/~/isarray/index.js ***!
   \*****************************************/
@@ -30241,7 +29521,7 @@
 
 
 /***/ },
-/* 221 */
+/* 220 */
 /*!***************************!*\
   !*** ./~/backo2/index.js ***!
   \***************************/
@@ -30335,8 +29615,858 @@
 
 
 /***/ },
-/* 222 */,
-/* 223 */
+/* 221 */
+/*!*******************************************!*\
+  !*** ./react/components/ClientManage.jsx ***!
+  \*******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(/*! react-dom */ 34);
+	
+	var _socket = __webpack_require__(/*! socket.io-client */ 172);
+	
+	var _socket2 = _interopRequireDefault(_socket);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var socket = (0, _socket2.default)(window.location.host);
+	
+	var ClientManage = _react2.default.createClass({
+	  displayName: 'ClientManage',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      initialJobs: jobsCreatedByUser,
+	      jobs: []
+	    };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    this.setState({ jobs: this.state.initialJobs });
+	  },
+	  componentDidMount: function componentDidMount() {
+	    socket.emit('client join channels', currentUserClient.id);
+	    socket.on('courier accepted client job', this.courierUpdatesJob);
+	    socket.on('courier updated status and/or position', this.courierUpdatesJob);
+	  },
+	  courierUpdatesJob: function courierUpdatesJob(job) {
+	    console.log("courierUpdateJob data:", job);
+	
+	    for (var i in this.state.jobs) {
+	      if (this.state.jobs[i].id === job.id) {
+	        var jobs = this.state.jobs;
+	        jobs[i] = job, this.setState({
+	          jobs: jobs
+	        });
+	        break;
+	      }
+	    }
+	  },
+	  clientUpdateJob: function clientUpdateJob(jobId, updatedJob) {
+	
+	    for (var i in this.state.jobs) {
+	      if (this.state.jobs[i].id === jobId) {
+	        var jobs = this.state.jobs;
+	
+	        jobs[i].pickupContactNumber = updatedJob.pickupContactNumber, jobs[i].pickupContactName = updatedJob.pickupContactName, jobs[i].dropoffContactNumber = updatedJob.dropoffContactNumber, jobs[i].dropoffContactName = updatedJob.dropoffContactName, this.setState({
+	          jobs: jobs
+	        });
+	
+	        socket.emit('client updates job', updatedJob);
+	
+	        break;
+	      }
+	    }
+	  },
+	  cancelJob: function cancelJob(jobId) {
+	    for (var i = 0; i < this.state.jobs.length; i++) {
+	      if (this.state.jobs[i].id === jobId) {
+	        var jobs = this.state.jobs;
+	        jobs.splice(i, 1);
+	        this.setState({
+	          jobs: jobs
+	        });
+	        socket.emit('client cancels job', jobId);
+	      }
+	    }
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'container' },
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'row text-align-center' },
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Jobs ordered'
+	        )
+	      ),
+	      this.state.jobs.map(function (job) {
+	        return _react2.default.createElement(Job, { key: job.id, job: job, clientUpdateJob: this.clientUpdateJob, cancelJob: this.cancelJob });
+	      }.bind(this))
+	    );
+	  }
+	});
+	
+	var Job = _react2.default.createClass({
+	  displayName: 'Job',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      id: this.props.job.id,
+	      clientId: this.props.job.clientId,
+	      courierId: this.props.job.courierId,
+	      courierDetails: this.props.job.courierDetails,
+	      status: this.props.job.status, // pending, assigned, enroute to pickup, enroute to deliver, completed, cancelled
+	      itemType: this.props.job.itemType,
+	      itemDescription: this.props.job.itemDescription,
+	      pickupLatitude: this.props.job.pickupLatitude,
+	      pickupLongitude: this.props.job.pickupLongitude,
+	      pickupTimeDate: this.props.job.pickupTimeDate,
+	      pickupAddress: this.props.job.pickupAddress,
+	      pickupPostalCode: this.props.job.pickupPostalCode,
+	      pickupCountryId: this.props.job.pickupCountryId, // assign first
+	      pickupContactName: this.props.job.pickupContactName,
+	      pickupContactNumber: this.props.job.pickupContactNumber,
+	      dropoffLatitude: this.props.job.dropoffLatitude,
+	      dropoffLongitude: this.props.job.dropoffLongitude,
+	      dropoffTimeDate: this.props.job.dropoffTimeDate,
+	      dropoffAddress: this.props.job.dropoffAddress,
+	      dropoffPostalCode: this.props.job.dropoffPostalCode,
+	      dropoffCountryId: this.props.job.dropoffCountryId, // assign first
+	      dropoffContactName: this.props.job.dropoffContactName,
+	      dropoffContactNumber: this.props.job.dropoffContactNumber,
+	      courierCurrentLatitude: this.props.job.courierCurrentLatitude, // to be updated when not assigned && not completed
+	      courierCurrentLongitude: this.props.job.courierCurrentLongitude,
+	      price: this.props.job.price,
+	      editing: false
+	    };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    this.setState(nextProps.job);
+	  },
+	  toggleEdit: function toggleEdit() {
+	    if (this.state.editing) {
+	      this.setState({
+	        editing: false
+	      });
+	    } else {
+	      this.setState({
+	        editing: true
+	      });
+	    }
+	  },
+	  saveState: function saveState() {
+	    var updatedJob = {
+	      id: this.state.id,
+	      pickupContactNumber: $("#editPickupContactNumber").val(),
+	      pickupContactName: $("#editPickupContactName").val(),
+	      dropoffContactNumber: $("#editDropoffContactNumber").val(),
+	      dropoffContactName: $("#editDropoffContactName").val(),
+	      editing: false
+	    };
+	    this.setState(updatedJob);
+	    this.props.clientUpdateJob(this.state.id, updatedJob);
+	  },
+	  acceptedByCourier: function acceptedByCourier() {
+	    if (this.state.courierDetails !== null) {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'ten columns offset-by-one' },
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          this.state.courierDetails.name,
+	          ' will be making the delivery and can be contacted at ',
+	          this.state.courierDetails.mobile,
+	          '.'
+	        )
+	      );
+	    }
+	  },
+	  render: function render() {
+	    var _this = this;
+	
+	    if (!this.state.editing) {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'row', style: { "border": "1px solid black",
+	            "padding": "1em",
+	            "marginBottom": "1.5em" } },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'five columns offset-by-one' },
+	            _react2.default.createElement(
+	              'h5',
+	              null,
+	              'JobID:1300',
+	              this.state.id,
+	              ' | Status:',
+	              this.state.status
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'five columns text-align-right' },
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'button', name: 'button', onClick: function onClick() {
+	                  return _this.toggleEdit();
+	                } },
+	              'Edit'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'button', name: 'button', onClick: function onClick() {
+	                  return _this.props.cancelJob(_this.state.id);
+	                } },
+	              'Cancel'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'ten columns offset-by-one' },
+	            _react2.default.createElement(GMap, null)
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'five columns offset-by-one' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'h5',
+	                null,
+	                'Pickup'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Name'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.pickupContactName
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Contact'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.pickupContactNumber
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Address'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.pickupAddress,
+	                ', ',
+	                _react2.default.createElement('br', null),
+	                'Singapore ',
+	                this.state.pickupPostalCode
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Date'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.pickupTimeDate.slice(0, 10)
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Time'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                _react2.default.createElement(
+	                  'p',
+	                  null,
+	                  this.state.pickupTimeDate.slice(11, 16)
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'five columns' },
+	            _react2.default.createElement(
+	              'h5',
+	              null,
+	              'Dropoff'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Name'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.dropoffContactName
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Contact'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.dropoffContactNumber
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Address'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.dropoffAddress,
+	                ', ',
+	                _react2.default.createElement('br', null),
+	                'Singapore ',
+	                this.state.dropoffPostalCode
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Date'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.dropoffTimeDate.slice(0, 10)
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Time'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                _react2.default.createElement(
+	                  'p',
+	                  null,
+	                  this.state.dropoffTimeDate.slice(11, 16)
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            this.acceptedByCourier()
+	          )
+	        )
+	      );
+	    } else {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'row', style: { "border": "1px solid black",
+	            "padding": "1em",
+	            "marginBottom": "1.5em" } },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'five columns offset-by-one' },
+	            _react2.default.createElement(
+	              'h5',
+	              null,
+	              'JobID:1300',
+	              this.state.id,
+	              ' | Status:',
+	              this.state.status
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'five columns text-align-right' },
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'button', name: 'button', onClick: function onClick() {
+	                  return _this.saveState();
+	                } },
+	              'Save'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'button', name: 'button', onClick: function onClick() {
+	                  return _this.toggleEdit();
+	                } },
+	              'Close Edit'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'five columns offset-by-one' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'h5',
+	                null,
+	                'Pickup'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Name'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                _react2.default.createElement('input', { type: 'text', id: 'editPickupContactName', defaultValue: this.state.pickupContactName })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Contact'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                _react2.default.createElement('input', { type: 'text', id: 'editPickupContactNumber', defaultValue: this.state.pickupContactNumber })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Address'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.pickupAddress,
+	                ', ',
+	                _react2.default.createElement('br', null),
+	                'Singapore ',
+	                this.state.pickupPostalCode
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Date'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.pickupTimeDate.slice(0, 10)
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Time'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                _react2.default.createElement(
+	                  'p',
+	                  null,
+	                  this.state.pickupTimeDate.slice(11, 16)
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'five columns' },
+	            _react2.default.createElement(
+	              'h5',
+	              null,
+	              'Dropoff'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Name'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                _react2.default.createElement('input', { type: 'text', id: 'editDropoffContactName', defaultValue: this.state.dropoffContactName })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Contact'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                _react2.default.createElement('input', { type: 'text', id: 'editDropoffContactNumber', defaultValue: this.state.dropoffContactNumber })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Address'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.dropoffAddress,
+	                ', ',
+	                _react2.default.createElement('br', null),
+	                'Singapore ',
+	                this.state.dropoffPostalCode
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Date'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                this.state.dropoffTimeDate.slice(0, 10)
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'row' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'three columns' },
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'Time'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nine columns' },
+	                _react2.default.createElement(
+	                  'p',
+	                  null,
+	                  this.state.dropoffTimeDate.slice(11, 16)
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            this.acceptedByCourier()
+	          )
+	        )
+	      );
+	    }
+	  }
+	});
+	
+	var GMap = _react2.default.createClass({
+	  displayName: 'GMap',
+	
+	  getInitialState: function getInitialState() {
+	    function midpoint(lat1, long1, lat2, long2) {
+	      return { lat: lat1 + (lat2 - lat1), lng: long1 + (long2 - long1) };
+	    }
+	    return {
+	      pickup: { lat: 1.307063, lng: 103.819973 },
+	      dropoff: { lat: 1.309507, lng: 103.895117 },
+	      courier: { lat: 1.306686, lng: 103.862452 },
+	      midpoint: midpoint(1.307063, 103.819973, 1.309507, 103.895117),
+	      zoom: 13
+	    };
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      'div',
+	      { className: 'GMap' },
+	      _react2.default.createElement('div', { className: 'GMap-canvas', ref: 'mapCanvas' })
+	    );
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var _this2 = this;
+	
+	    this.map = this.createMap();
+	    this.marker = this.createMarker();
+	    this.dropoffMarker = this.createDropoffMarker();
+	    this.courierMarker = this.createCourierMarker();
+	    this.pickupMarker = this.createPickupMarker();
+	    this.pickupMarker = this.createCourierMarker();
+	    this.infoWindowPickup = this.createInfoWindowPickup();
+	    this.infoWindowForDropoff = this.createInfoWindowForDropoff();
+	    this.infoWindowForCourier = this.createInfoWindowForCourier();
+	    google.maps.event.addListener(this.map, 'zoom_changed', function () {
+	      return _this2.handleZoomChange();
+	    });
+	  },
+	  componentDidUnMount: function componentDidUnMount() {
+	    google.maps.event.clearListeners(map, 'zoom_changed');
+	  },
+	  createMap: function createMap() {
+	    var mapOptions = {
+	      zoom: this.state.zoom,
+	      center: this.mapCenter()
+	    };
+	    return new google.maps.Map(this.refs.mapCanvas, mapOptions);
+	  },
+	  mapCenter: function mapCenter() {
+	    return new google.maps.LatLng(this.state.pickup.lat, this.state.pickup.lng);
+	  },
+	  dropoffPoint: function dropoffPoint() {
+	    return new google.maps.LatLng(this.state.dropoff.lat, this.state.dropoff.lng);
+	  },
+	  pickupPoint: function pickupPoint() {
+	    return new google.maps.LatLng(this.state.pickup.lat, this.state.pickup.lng);
+	  },
+	  courierPoint: function courierPoint() {
+	    return new google.maps.LatLng(this.state.courier.lat, this.state.courier.lng);
+	  },
+	  createMarker: function createMarker() {
+	    return new google.maps.Marker({
+	      position: this.mapCenter(),
+	      map: this.map
+	    });
+	  },
+	  createDropoffMarker: function createDropoffMarker() {
+	    return new google.maps.Marker({
+	      position: this.dropoffPoint(),
+	      map: this.map
+	    });
+	  },
+	  createPickupMarker: function createPickupMarker() {
+	    return new google.maps.Marker({
+	      position: this.pickupPoint(),
+	      map: this.map
+	    });
+	  },
+	  createCourierMarker: function createCourierMarker() {
+	    var image = 'http://i77.photobucket.com/albums/j55/Nolamom/Fun%20gifs/Christmas%20Gifs/running_reindeer.gif~original';
+	
+	    return new google.maps.Marker({
+	      position: this.courierPoint(),
+	      map: this.map,
+	      icon: image
+	    });
+	  },
+	  createInfoWindowForDropoff: function createInfoWindowForDropoff() {
+	    var contentString = "<div class='InfoWindow'>Dropoff</div>";
+	    return new google.maps.InfoWindow({
+	      map: this.map,
+	      anchor: this.dropoffMarker,
+	      content: contentString
+	    });
+	  },
+	  createInfoWindowPickup: function createInfoWindowPickup() {
+	    var contentString = "<div class='InfoWindow'>Pickup</div>";
+	    return new google.maps.InfoWindow({
+	      map: this.map,
+	      anchor: this.marker,
+	      content: contentString
+	    });
+	  },
+	  createInfoWindowForCourier: function createInfoWindowForCourier() {
+	    var contentString = "<div class='InfoWindow'>Courier</div>";
+	    return new google.maps.InfoWindow({
+	      map: this.map,
+	      anchor: this.courierMarker,
+	      content: contentString
+	    });
+	  },
+	  handleZoomChange: function handleZoomChange() {
+	    this.setState({
+	      zoom: this.map.getZoom()
+	    });
+	  }
+	});
+	
+	if (document.getElementById('clientManage') !== null) {
+	  (0, _reactDom.render)(_react2.default.createElement(ClientManage, null), document.getElementById('clientManage'));
+	}
+
+/***/ },
+/* 222 */
 /*!*************************************************!*\
   !*** ./react/components/CourierJobsListing.jsx ***!
   \*************************************************/
@@ -30350,7 +30480,7 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 34);
 	
-	var _socket = __webpack_require__(/*! socket.io-client */ 173);
+	var _socket = __webpack_require__(/*! socket.io-client */ 172);
 	
 	var _socket2 = _interopRequireDefault(_socket);
 	
@@ -30762,7 +30892,7 @@
 	}
 
 /***/ },
-/* 224 */
+/* 223 */
 /*!************************************************!*\
   !*** ./react/components/CourierManageJobs.jsx ***!
   \************************************************/
@@ -30776,7 +30906,7 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 34);
 	
-	var _socket = __webpack_require__(/*! socket.io-client */ 173);
+	var _socket = __webpack_require__(/*! socket.io-client */ 172);
 	
 	var _socket2 = _interopRequireDefault(_socket);
 	

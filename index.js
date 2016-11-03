@@ -9,6 +9,7 @@ var passport = require('./config/ppConfig')
 var isLoggedIn = require('./middleware/isLoggedIn')
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
+var dotenv = require('dotenv').config()
 
 // var userType = require('./middleware/userType')
 
