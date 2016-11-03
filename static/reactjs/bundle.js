@@ -30762,8 +30762,8 @@
 	        'div',
 	        { className: 'row text-align-center' },
 	        _react2.default.createElement(
-	          'h1',
-	          { className: 'zero-margins' },
+	          'h3',
+	          { className: 'top-margin white-font' },
 	          'Jobs Accepted'
 	        )
 	      ),
@@ -30799,6 +30799,12 @@
 	        '/5 (',
 	        this.state.clientDetails.jobQty,
 	        ' jobs)'
+	      );
+	    } else {
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'inline-block' },
+	        'This is a new user'
 	      );
 	    }
 	  },
@@ -30942,200 +30948,116 @@
 	        { className: 'row' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'six columns offset-by-one' },
+	          { className: 'ten columns offset-by-one' },
 	          _react2.default.createElement(
-	            'h5',
-	            { className: 'zero-margins' },
-	            'JobID: 1300',
+	            'p',
+	            { className: 'tinyfont' },
+	            'ID1300',
 	            this.state.id
 	          ),
 	          _react2.default.createElement(
-	            'div',
-	            null,
+	            'p',
+	            { className: 'tiny-top-margin zero-paddings zero-margins status-font-size' },
 	            this.state.clientDetails.name,
-	            ', ',
+	            ' - ',
 	            this.clientRating()
 	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'four columns text-align-center' },
-	          _react2.default.createElement(
-	            'strong',
-	            null,
-	            '$',
-	            this.state.price
-	          ),
-	          ' (',
-	          this.state.itemCategory.name,
-	          ')',
-	          _react2.default.createElement('br', null),
-	          this.buttonToShow()
 	        )
 	      ),
-	      _react2.default.createElement('div', { className: 'row' }),
 	      _react2.default.createElement(
 	        'div',
 	        { className: 'row' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'five columns offset-by-one' },
+	          { className: 'five columns offset-by-one top-bottom-padding' },
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
+	            'p',
+	            { className: 'tiny-margin' },
 	            _react2.default.createElement(
-	              'p',
-	              { className: 'zero-margins' },
-	              _react2.default.createElement(
-	                'u',
-	                null,
-	                'Pickup'
-	              )
+	              'strong',
+	              null,
+	              'Pickup'
 	            )
 	          ),
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'three columns' },
-	              _react2.default.createElement(
-	                'strong',
-	                null,
-	                'Contact'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'nine columns' },
-	              this.state.pickupContactName,
-	              ' (',
-	              this.state.pickupContactNumber,
-	              ')'
-	            )
+	            'p',
+	            { className: 'tiny-margin' },
+	            this.state.pickupContactName,
+	            ' (',
+	            this.state.pickupContactNumber,
+	            ')'
 	          ),
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'three columns' },
-	              _react2.default.createElement(
-	                'strong',
-	                null,
-	                'Address'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'nine columns' },
-	              this.state.pickupAddress,
-	              ', ',
-	              this.state.pickupPostalCode
-	            )
+	            'p',
+	            { className: 'tiny-margin' },
+	            this.state.pickupAddress,
+	            ',Singapore ',
+	            this.state.pickupPostalCode
 	          ),
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'three columns' },
-	              _react2.default.createElement(
-	                'strong',
-	                null,
-	                'Time'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'nine columns' },
-	              _react2.default.createElement(
-	                'p',
-	                null,
-	                this.state.pickupTimeDate.slice(0, 10),
-	                ', ',
-	                this.state.pickupTimeDate.slice(11, 16)
-	              )
-	            )
+	            'p',
+	            { className: 'tiny-margin' },
+	            this.state.pickupTimeDate.slice(0, 10),
+	            ' ',
+	            this.state.pickupTimeDate.slice(11, 16)
 	          )
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'five columns' },
+	          { className: 'five columns top-bottom-padding' },
 	          _react2.default.createElement(
 	            'p',
-	            { className: 'zero-margins' },
+	            { className: 'tiny-margin' },
 	            _react2.default.createElement(
-	              'u',
+	              'strong',
 	              null,
 	              'Dropoff'
 	            )
 	          ),
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'three columns' },
-	              _react2.default.createElement(
-	                'strong',
-	                null,
-	                'Contact'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'nine columns' },
-	              this.state.dropoffContactName,
-	              ' (',
-	              this.state.dropoffContactNumber,
-	              ')'
-	            )
+	            'p',
+	            { className: 'tiny-margin' },
+	            this.state.dropoffContactName,
+	            '(',
+	            this.state.dropoffContactNumber,
+	            ')'
 	          ),
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'three columns' },
-	              _react2.default.createElement(
-	                'strong',
-	                null,
-	                'Address'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'nine columns' },
-	              this.state.dropoffAddress,
-	              ', ',
-	              this.state.dropoffPostalCode
-	            )
+	            'p',
+	            { className: 'tiny-margin' },
+	            this.state.dropoffAddress,
+	            ', Singapore ',
+	            this.state.dropoffPostalCode
 	          ),
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'three columns' },
-	              _react2.default.createElement(
-	                'strong',
-	                null,
-	                'Time'
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'nine columns' },
-	              _react2.default.createElement(
-	                'p',
-	                null,
-	                this.state.dropoffTimeDate.slice(0, 10),
-	                ', ',
-	                this.state.dropoffTimeDate.slice(11, 16)
-	              )
-	            )
+	            'p',
+	            { className: 'tiny-margin' },
+	            this.state.dropoffTimeDate.slice(0, 10),
+	            ' ',
+	            this.state.dropoffTimeDate.slice(11, 16)
 	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'row' },
+	        _react2.default.createElement(
+	          'strong',
+	          null,
+	          '$',
+	          this.state.price
+	        ),
+	        ' (',
+	        this.state.itemCategory.name,
+	        ')'
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'row' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'ten columns offset-by-one text-align-center tiny-top-margin' },
+	          this.buttonToShow()
 	        )
 	      )
 	    );

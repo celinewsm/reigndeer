@@ -38,9 +38,10 @@ var CourierManageJobs = React.createClass({
   },
   render: function () {
     return (
+
       <div className="container">
         <div className="row text-align-center">
-          <h1 className="zero-margins">Jobs Accepted</h1>
+          <h3 className="top-margin white-font">Jobs Accepted</h3>
         </div>
         {
           this.state.jobs.map(function(job) {
@@ -48,6 +49,7 @@ var CourierManageJobs = React.createClass({
           }.bind(this))
         }
       </div>
+
     );
   }
 });
@@ -71,6 +73,8 @@ clientRating: function(){
     return (
         <div className="inline-block">{this.state.clientDetails.rating}/5 ({this.state.clientDetails.jobQty} jobs)</div>
     )
+  } else {
+    <div className="inline-block">This is a new user</div>
   }
 },
 courierStartsPickup: function(){
@@ -173,87 +177,45 @@ buttonToShow: function(){
 },
 render: function(){
       return (
+
+
+
         <div className="row white-box">
-        <div className="row">
-            <div className="six columns offset-by-one">
-              <h5 className="zero-margins">JobID: 1300{this.state.id}</h5>
-              <div>{this.state.clientDetails.name}, {this.clientRating()}</div>
-            </div>
-            <div className="four columns text-align-center">
-              <strong>${this.state.price}</strong> ({this.state.itemCategory.name})<br/>
-              {this.buttonToShow()}
-            </div>
-          </div>
+
           <div className="row">
-          </div>
-          <div className="row">
-            <div className="five columns offset-by-one">
-              <div className="row">
-                  <p className="zero-margins"><u>Pickup</u></p>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Contact</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.pickupContactName} ({this.state.pickupContactNumber})
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Address</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.pickupAddress}, {this.state.pickupPostalCode}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Time</strong>
-                </div>
-                <div className="nine columns">
-                  <p>
-                    {this.state.pickupTimeDate.slice(0,10)}, {this.state.pickupTimeDate.slice(11,16)}
-                  </p>
-                </div>
-              </div>
-
-            </div>
-
-            <div className="five columns">
-              <p className="zero-margins"><u>Dropoff</u></p>
-              <div className="row">
-                <div className="three columns">
-                <strong>Contact</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.dropoffContactName} ({this.state.dropoffContactNumber})
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Address</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.dropoffAddress}, {this.state.dropoffPostalCode}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Time</strong>
-                </div>
-                <div className="nine columns">
-                    <p>
-                      {this.state.dropoffTimeDate.slice(0,10)}, {this.state.dropoffTimeDate.slice(11,16)}
-                    </p>
-                </div>
-              </div>
+            <div className="ten columns offset-by-one">
+              <p className="tinyfont">ID1300{this.state.id}</p>
+              <p className="tiny-top-margin zero-paddings zero-margins status-font-size">{this.state.clientDetails.name} - {this.clientRating()}</p>
 
             </div>
           </div>
-        </div>
+           <div className="row">
+            <div className="five columns offset-by-one top-bottom-padding">
+              <p className="tiny-margin"><strong>Pickup</strong></p>
+              <p className="tiny-margin">{this.state.pickupContactName} ({this.state.pickupContactNumber})</p>
+              <p className="tiny-margin">{this.state.pickupAddress},Singapore {this.state.pickupPostalCode}</p>
+              <p className="tiny-margin">{this.state.pickupTimeDate.slice(0,10)} {this.state.pickupTimeDate.slice(11,16)}</p>
+            </div>
+             <div className="five columns top-bottom-padding">
+              <p className="tiny-margin"><strong>Dropoff</strong></p>
+              <p className="tiny-margin">{this.state.dropoffContactName}({this.state.dropoffContactNumber})</p>
+              <p className="tiny-margin">{this.state.dropoffAddress}, Singapore {this.state.dropoffPostalCode}</p>
+              <p className="tiny-margin">{this.state.dropoffTimeDate.slice(0,10)} {this.state.dropoffTimeDate.slice(11,16)}</p>
+             </div>
+            </div>
+
+            <div className="row">
+              <strong>${this.state.price}</strong> ({this.state.itemCategory.name})
+             </div>
+
+             <div className="row">
+              <div className="ten columns offset-by-one text-align-center tiny-top-margin">
+                {this.buttonToShow()}
+              </div>
+             </div>
+            </div>
+
+
       )
   }
 })
