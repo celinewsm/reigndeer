@@ -153,6 +153,31 @@ acceptedByCourier: function(){
       )
   }
 },
+insertGMap: function(){
+  console.log("this.state.courierCurrentLatitude",this.state.courierCurrentLatitude)
+  if(this.state.courierCurrentLatitude !== null){
+    return (
+      <div className="row">
+        <div className="ten columns offset-by-one">
+
+          <GMap pickupLatitude={this.state.pickupLatitude}
+                pickupLongitude={this.state.pickupLongitude}
+                dropoffLatitude={this.state.dropoffLatitude}
+                dropoffLongitude={this.state.dropoffLongitude}
+                courierCurrentLatitude={this.state.courierCurrentLatitude}
+                courierCurrentLongitude={this.state.courierCurrentLongitude} />
+        </div>
+      </div>
+    )
+  }
+
+},
+ifCanCancel: function(){
+
+  if (this.state.status === "Pending"){
+    return  <div><button type="button" name="button" onClick={() => this.props.cancelJob(this.state.id)} >Cancel</button></div>
+  }
+},
 render: function(){
     if (!this.state.editing){
       return (
@@ -165,16 +190,10 @@ render: function(){
             </div>
             <div className="five columns text-align-right">
               <button type="button" name="button" onClick={() => this.toggleEdit()} >Edit</button>
-              <button type="button" name="button" onClick={() => this.props.cancelJob(this.state.id)} >Cancel</button>
+              {this.ifCanCancel()}
             </div>
           </div>
-
-          <div className="row">
-            <div className="ten columns offset-by-one">
-              <GMap />
-            </div>
-          </div>
-
+          {this.insertGMap()}
           <div className="row">
             <div className="five columns offset-by-one">
               <div className="row">
@@ -415,27 +434,45 @@ render: function(){
 
 
 
-
-
-
-
-
-
-
-
 var GMap = React.createClass({
   getInitialState: function () {
-    function midpoint(lat1, long1, lat2, long2) {
-       return {lat: (lat1 + (lat2 - lat1)), lng: (long1 + (long2 - long1))};
-  }
+
+  if (this.props.courierCurrentLatitude !== null){
     return {
-      pickup: { lat: 1.307063, lng: 103.819973 },
-      dropoff: { lat: 1.309507, lng: 103.895117 },
-      courier: { lat: 1.306686, lng: 103.862452 },
-      midpoint: midpoint(1.307063,103.819973,1.309507,103.895117),
+      pickup: { lat: this.props.pickupLatitude, lng: this.props.pickupLongitude },
+      dropoff: { lat: this.props.dropoffLatitude, lng: this.props.dropoffLongitude },
+      courier: { lat: this.props.courierCurrentLatitude, lng: this.props.courierCurrentLongitude },
+      midpoint: midpoint(this.props.pickupLatitude,this.props.pickupLongitude,this.props.dropoffLatitude,this.props.courierCurrentLongitude),
       zoom: 13,
     }
+  } else {
+    return {
+      pickup: { lat: this.props.pickupLatitude, lng: this.props.pickupLongitude },
+      dropoff: { lat: this.props.dropoffLatitude, lng: this.props.dropoffLongitude },
+      midpoint: midpoint(this.props.pickupLatitude,this.props.pickupLongitude,this.props.dropoffLatitude,this.props.courierCurrentLongitude),
+      zoom: 13,
+    }
+  }
   },
+  componentWillReceiveProps: function(nextProps) {
+
+    if (nextProps.courierCurrentLatitude !== null){
+
+      this.setState({
+        pickup: { lat: nextProps.pickupLatitude, lng: nextProps.pickupLongitude },
+        dropoff: { lat: nextProps.dropoffLatitude, lng: nextProps.dropoffLongitude },
+        courier: { lat: nextProps.courierCurrentLatitude, lng: nextProps.courierCurrentLongitude },
+        midpoint: midpoint(nextProps.pickupLatitude,nextProps.pickupLongitude,nextProps.dropoffLatitude,nextProps.courierCurrentLongitude),
+      });
+    } else {
+      this.setState({
+        pickup: { lat: nextProps.pickupLatitude, lng: nextProps.pickupLongitude },
+        dropoff: { lat: nextProps.dropoffLatitude, lng: nextProps.dropoffLongitude },
+        midpoint: midpoint(nextProps.pickupLatitude,nextProps.pickupLongitude,nextProps.dropoffLatitude,nextProps.courierCurrentLongitude),
+      });
+    }
+
+},
   render: function () {
     return (
       <div className="GMap">
@@ -448,13 +485,20 @@ var GMap = React.createClass({
     this.map = this.createMap()
     this.marker = this.createMarker()
     this.dropoffMarker = this.createDropoffMarker()
-    this.courierMarker = this.createCourierMarker()
     this.pickupMarker = this.createPickupMarker()
-    this.pickupMarker = this.createCourierMarker()
     this.infoWindowPickup = this.createInfoWindowPickup()
     this.infoWindowForDropoff = this.createInfoWindowForDropoff()
-    this.infoWindowForCourier = this.createInfoWindowForCourier()
+    if (this.state.courier !== undefined){
+      this.courierMarker = this.createCourierMarker()
+      this.infoWindowForCourier = this.createInfoWindowForCourier()
+    }
     google.maps.event.addListener(this.map, 'zoom_changed', ()=> this.handleZoomChange())
+  },
+  componentDidUpdate: function(){
+    if (this.state.courier !== undefined){
+      this.courierMarker = this.createCourierMarker()
+      this.infoWindowForCourier = this.createInfoWindowForCourier()
+    }
   },
   componentDidUnMount: function(){
     google.maps.event.clearListeners(map, 'zoom_changed')
@@ -551,7 +595,9 @@ var GMap = React.createClass({
 
 
 
-
+function midpoint(lat1, long1, lat2, long2) {
+   return {lat: (lat1 + (lat2 - lat1)), lng: (long1 + (long2 - long1))};
+}
 
 
 

@@ -117,7 +117,11 @@ pauseCourierActivity: function(){
   this.setState({
     status: "Accepted"
   })
-  clearInterval(startTrackingCourierLocation)
+
+  if(startTrackingCourierLocation){
+    clearInterval(startTrackingCourierLocation)
+    startTrackingCourierLocation = false
+  }
 
   socket.emit('pause courier activity', {jobId: this.state.id,
                                           status: "Accepted"});
