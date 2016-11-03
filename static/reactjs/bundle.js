@@ -30470,10 +30470,16 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'inline-block' },
-	        this.state.clientDetails.rating,
-	        '/5 out of ',
-	        this.state.clientDetails.jobQty,
-	        ' requests'
+	        _react2.default.createElement(
+	          'p',
+	          { className: 'tiny-top-margin zero-paddings zero-margins status-font-size' },
+	          this.state.clientDetails.name,
+	          ' - ',
+	          this.state.clientDetails.rating,
+	          '/5 out of ',
+	          this.state.clientDetails.jobQty,
+	          ' requests'
+	        )
 	      );
 	    }
 	  },
@@ -30495,13 +30501,7 @@
 	            'ID1300',
 	            this.state.id
 	          ),
-	          _react2.default.createElement(
-	            'p',
-	            { className: 'tiny-top-margin zero-paddings zero-margins status-font-size' },
-	            this.state.clientDetails.name,
-	            ' - ',
-	            this.clientRating()
-	          )
+	          this.clientRating()
 	        )
 	      ),
 	      _react2.default.createElement(
@@ -30710,16 +30710,16 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'inline-block' },
-	        this.state.clientDetails.rating,
-	        '/5 (',
-	        this.state.clientDetails.jobQty,
-	        ' jobs)'
-	      );
-	    } else {
-	      _react2.default.createElement(
-	        'div',
-	        { className: 'inline-block' },
-	        'This is a new user'
+	        _react2.default.createElement(
+	          'p',
+	          { className: 'tiny-top-margin zero-paddings zero-margins status-font-size' },
+	          this.state.clientDetails.name,
+	          ' - ',
+	          this.state.clientDetails.rating,
+	          '/5 out of ',
+	          this.state.clientDetails.jobQty,
+	          ' requests'
+	        )
 	      );
 	    }
 	  },
@@ -30870,13 +30870,7 @@
 	            'ID1300',
 	            this.state.id
 	          ),
-	          _react2.default.createElement(
-	            'p',
-	            { className: 'tiny-top-margin zero-paddings zero-margins status-font-size' },
-	            this.state.clientDetails.name,
-	            ' - ',
-	            this.clientRating()
-	          )
+	          this.clientRating()
 	        )
 	      ),
 	      _react2.default.createElement(

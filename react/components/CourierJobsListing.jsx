@@ -155,7 +155,9 @@ var Job = React.createClass({
 clientRating: function(){
   if (this.state.clientDetails.rating){
     return (
-        <div className="inline-block">{this.state.clientDetails.rating}/5 out of {this.state.clientDetails.jobQty} requests</div>
+      <div className="inline-block">
+        <p className="tiny-top-margin zero-paddings zero-margins status-font-size">{this.state.clientDetails.name} - {this.state.clientDetails.rating}/5 out of {this.state.clientDetails.jobQty} requests</p>
+      </div>      
     )
   }
 },
@@ -166,8 +168,7 @@ render: function(){
           <div className="row">
             <div className="ten columns offset-by-one">
               <p className="tinyfont">ID1300{this.state.id}</p>
-              <p className="tiny-top-margin zero-paddings zero-margins status-font-size">{this.state.clientDetails.name} - {this.clientRating()}</p>
-
+              {this.clientRating()}
             </div>
           </div>
            <div className="row">
