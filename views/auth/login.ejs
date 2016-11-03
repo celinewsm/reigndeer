@@ -1,33 +1,27 @@
-
 <div class="container">
     <div class="row" style="margin-top: 15%">
-      <h3>Login</h3>
+      <h3 class="top-margin white-font">Login</h3>
     </div>
     <form action="/auth/login" method="POST">
 
       <div class="row">
 
-        <div class="sixteen columns">
-          <label for="loginEmail">Email</label>
+        <div class="eight columns offset-by-two">
+          <label for="loginEmail" class="white-font">Email</label>
           <input class="u-full-width" type="text" name="email" id="loginEmail">
         </div>
 
       </div>
 
       <div class="row">
-        <div class="sixteen columns">
-          <label for="loginPassword">Password</label>
+        <div class="eight columns offset-by-two">
+          <label for="loginPassword" class="white-font">Password</label>
           <input class="u-full-width" type="password" name="password" id="loginPassword">
         </div>
       </div>
 
       <input class="button-primary" type="submit" value="Submit">
     </form>
-      <a href="/auth/signup"><button type="button">Create new account</button></a>
-      <!-- <div class="row">
-        <div id="appendmap">
-
-        </div>
-      </div> -->
+      <a href="/auth/signup"><button type="button" class="white-text-white-border-button">Create new account</button></a>
   </div>
 </div>

@@ -161,6 +161,7 @@ body {
 
 .bg-skew {
   background: tomato;
+  background: #FF5757;
   -webkit-transform: skew(0deg, -10deg);
   transform: skew(0deg, -10deg);
   padding: 100px 0;
@@ -210,11 +211,11 @@ body {
 }
 
 .blue-font{
-  color: blue
+  color: #14B5CC
 }
 
 .green-font{
-  color: green
+  color: #27d25c
 }
 
 .tiny-bottom-margin{

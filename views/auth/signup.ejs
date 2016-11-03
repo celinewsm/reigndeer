@@ -1,32 +1,32 @@
 
 <div class="container">
-    <div class="row" style="margin-top: 25%">
-      <h3>Sign up</h3>
+    <div class="row">
+      <h3 class="top-margin white-font">Sign up</h3>
     </div>
     <form action="/auth/signup" method="POST">
       <div class="row">
         <div class="six columns">
-          <label for="newUserName">Name</label>
+          <label for="newUserName" class="white-font" >Name</label>
           <input class="u-full-width" type="text" name="name" placeholder="How do we address you?" id="newUserName">
         </div>
         <div class="six columns">
-          <label for="newUserEmail">Email</label>
+          <label for="newUserEmail" class="white-font" >Email</label>
           <input class="u-full-width" type="email" name="email" placeholder="ruldoph@northpole.com" id="newUserEmail">
         </div>
       </div>
       <div class="row">
         <div class="six columns">
-          <label for="newUserMobile">Mobile number</label>
+          <label for="newUserMobile" class="white-font" >Mobile number</label>
           <input class="u-full-width" type="number" name="mobile" placeholder="Only incase of emergency" id="newUserMobile">
         </div>
         <div class="six columns">
-          <label for="newUserPassword">Password</label>
+          <label for="newUserPassword" class="white-font" >Password</label>
           <input class="u-full-width" type="password" name="password" placeholder="Choose wisely! [min 8 characters]" id="newUserPassword">
         </div>
       </div>
 
       <div class="row">
-          <label for="newUserType">Reason for joining</label>
+          <label for="newUserType" class="white-font" >Reason for joining</label>
           <select class="u-full-width" name="type" id="newUserType">
             <option value="client">I want to send stuff!</option>
             <option value="courier">I want to be a REIGNdeer!</option>
@@ -35,7 +35,7 @@
 
       <input class="button-primary" type="submit" value="Submit">
     </form>
-    <a href="/auth/login"><button type="button">I have an account</button></a>
+    <a href="/auth/login"><button type="button" class="white-text-white-border-button">I have an account</button></a>
 
   </div>
 </div>
