@@ -36,6 +36,10 @@
   margin: 0;
 }
 
+.zero-paddings{
+  padding: 0 !important;
+}
+
 .top-margin{
   margin-top: 1.5em
 }
@@ -127,7 +131,7 @@ select {
 
 div .white-box{
   /*border: 1px solid black !important;*/
-  padding: 1em !important;
+  padding: 1.5em !important;
   margin-bottom: 1.5em !important;
   background-color: white !important;
   box-shadow: 7px 7px 0px 0px rgba(0, 0, 0, .2);;
@@ -168,4 +172,51 @@ body {
   /*width: 60%;*/
   -webkit-transform: skew(0deg, 10deg);
   transform: skew(0deg, 10deg);
+}
+
+
+
+
+
+.tiny-margin{
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+}
+
+.top-bottom-padding{
+  padding-bottom: 0.5em
+}
+
+.tinyfont{
+  font-size: 0.2em;
+  margin-top:0;
+  margin-bottom:0;
+}
+
+.tiny-top-margin{
+  margin-top: 0.2em;
+}
+
+.zero-bottom-margin{
+  margin-bottom: 0;
+}
+
+.status-font-size{
+  font-size: 1.3em
+}
+
+.grey-font{
+  color:grey
+}
+
+.blue-font{
+  color: blue
+}
+
+.green-font{
+  color: green
+}
+
+.tiny-bottom-margin{
+  margin-bottom:0.5em !important
 }

@@ -148,7 +148,7 @@ acceptedByCourier: function(){
   if (this.state.courierDetails !== null){
       return(
         <div className="ten columns offset-by-one">
-          <div>{this.state.courierDetails.name} will be making the delivery and can be contacted at {this.state.courierDetails.mobile}.</div>
+          <p className="tiny-bottom-margin">{this.state.courierDetails.name} will be making the delivery and can be contacted at {this.state.courierDetails.mobile}.</p>
         </div>
       )
   }
@@ -175,254 +175,114 @@ insertGMap: function(){
 ifCanCancel: function(){
 
   if (this.state.status === "Pending"){
-    return  <div><button type="button" name="button" onClick={() => this.props.cancelJob(this.state.id)} >Cancel</button></div>
+    return  <div className="inline-block"><button type="button" name="button" onClick={() => this.props.cancelJob(this.state.id)} >Cancel</button></div>
+  }
+},
+classForStatus: function(){
+  if (this.state.status === "Pending"){
+    return "tiny-top-margin zero-paddings zero-margins status-font-size grey-font"
+  } else if (this.state.status === "Accepted") {
+    return "tiny-top-margin zero-paddings zero-margins status-font-size blue-font"
+  } else if (this.state.status === "Completed"){
+    return "tiny-top-margin zero-paddings zero-margins status-font-size"
+  } else {
+    return "tiny-top-margin zero-paddings zero-margins status-font-size green-font"
   }
 },
 render: function(){
     if (!this.state.editing){
       return (
         <div className="row white-box">
-        <div className="row">
-            <div className="five columns offset-by-one">
-              <h5>JobID:1300{this.state.id} | Status:{this.state.status}</h5>
-            </div>
-            <div className="five columns text-align-right">
-              <button type="button" name="button" onClick={() => this.toggleEdit()} >Edit</button>
-              {this.ifCanCancel()}
+
+          <div className="row">
+            <div className="ten columns offset-by-one">
+              <p className="tinyfont">ID1300{this.state.id}</p>
+              <p className={this.classForStatus()}>{this.state.status}</p>
             </div>
           </div>
           {this.insertGMap()}
-          <div className="row">
-            <div className="five columns offset-by-one">
-              <div className="row">
-                  <h5>Pickup</h5>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Name</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.pickupContactName}
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Contact</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.pickupContactNumber}
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Address</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.pickupAddress}, <br/>
-                  Singapore {this.state.pickupPostalCode}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Date</strong>
-                </div>
-                <div className="nine columns">
-                    {this.state.pickupTimeDate.slice(0,10)}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Time</strong>
-                </div>
-                <div className="nine columns">
-                    {this.state.pickupTimeDate.slice(11,16)}
-                </div>
-              </div>
-
+           <div className="row">
+            <div className="five columns offset-by-one top-bottom-padding">
+              <p className="tiny-margin"><strong>Pickup</strong></p>
+              <p className="tiny-margin">{this.state.pickupContactName}</p>
+              <p className="tiny-margin">{this.state.pickupContactNumber}</p>
+              <p className="tiny-margin">{this.state.pickupAddress}</p>
+              <p className="tiny-margin">Singapore {this.state.pickupPostalCode}</p>
+              <p className="tiny-margin">{this.state.pickupTimeDate.slice(0,10)} {this.state.pickupTimeDate.slice(11,16)}</p>
+            </div>
+             <div className="five columns top-bottom-padding">
+              <p className="tiny-margin"><strong>Dropoff</strong></p>
+              <p className="tiny-margin">{this.state.dropoffContactName}</p>
+              <p className="tiny-margin">{this.state.dropoffContactNumber}</p>
+              <p className="tiny-margin">{this.state.dropoffAddress}</p>
+              <p className="tiny-margin">Singapore {this.state.dropoffPostalCode}</p>
+              <p className="tiny-margin">{this.state.dropoffTimeDate.slice(0,10)} {this.state.dropoffTimeDate.slice(11,16)}</p>
+             </div>
             </div>
 
-            <div className="five columns">
-              <h5>Dropoff</h5>
-              <div className="row">
-                <div className="three columns">
-                <strong>Name</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.dropoffContactName}
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Contact</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.dropoffContactNumber}
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Address</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.dropoffAddress}, <br/>
-                  Singapore {this.state.dropoffPostalCode}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Date</strong>
-                </div>
-                <div className="nine columns">
-                    {this.state.dropoffTimeDate.slice(0,10)}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Time</strong>
-                </div>
-                <div className="nine columns">
-                    {this.state.dropoffTimeDate.slice(11,16)}
-                </div>
-              </div>
-
-
-            </div>
             <div className="row">
               {this.acceptedByCourier()}
+             </div>
+
+             <div className="row">
+              <div className="ten columns offset-by-one text-align-center tiny-top-margin">
+                <button type="button" name="button" onClick={() => this.toggleEdit()} >Edit</button>
+                {this.ifCanCancel()}
+              </div>
+             </div>
             </div>
-          </div>
-        </div>
       )
     }
     else {
       return (
-        <div className="row" style={{"padding": "1em",
-                              "marginBottom": "1.5em",
-                              "backgroundColor": "white"  }}>
-        <div className="row">
-            <div className="five columns offset-by-one">
-              <h5>JobID:1300{this.state.id} | Status:{this.state.status}</h5>
-            </div>
-            <div className="five columns text-align-right">
-              <button type="button" name="button" onClick={() => this.saveState()} >Save</button>
-              <button type="button" name="button" onClick={() => this.toggleEdit()} >Close Edit</button>
-            </div>
-          </div>
+
+
+        <div className="row white-box">
 
           <div className="row">
-            <div className="five columns offset-by-one">
-              <div className="row">
-                  <h5>Pickup</h5>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Name</strong>
-                </div>
-                <div className="nine columns">
-                  <input type="text" id="editPickupContactName" defaultValue={this.state.pickupContactName}></input>
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Contact</strong>
-                </div>
-                <div className="nine columns">
-                  <input type="text" id="editPickupContactNumber" defaultValue={this.state.pickupContactNumber}></input>
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Address</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.pickupAddress}, <br/>
-                  Singapore {this.state.pickupPostalCode}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Date</strong>
-                </div>
-                <div className="nine columns">
-                    {this.state.pickupTimeDate.slice(0,10)}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Time</strong>
-                </div>
-                <div className="nine columns">
-                    {this.state.pickupTimeDate.slice(11,16)}
-                </div>
-              </div>
-
-            </div>
-
-            <div className="five columns">
-              <h5>Dropoff</h5>
-              <div className="row">
-                <div className="three columns">
-                <strong>Name</strong>
-                </div>
-                <div className="nine columns">
-                  <input type="text" id="editDropoffContactName" defaultValue={this.state.dropoffContactName}></input>
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Contact</strong>
-                </div>
-                <div className="nine columns">
-                  <input type="text" id="editDropoffContactNumber" defaultValue={this.state.dropoffContactNumber}></input>
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Address</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.dropoffAddress}, <br/>
-                  Singapore {this.state.dropoffPostalCode}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Date</strong>
-                </div>
-                <div className="nine columns">
-                    {this.state.dropoffTimeDate.slice(0,10)}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Time</strong>
-                </div>
-                <div className="nine columns">
-                    {this.state.dropoffTimeDate.slice(11,16)}
-                </div>
-              </div>
-
-
-            </div>
-            <div className="row">
-              {this.acceptedByCourier()}
+            <div className="ten columns offset-by-one">
+              <p className="tinyfont">ID1300{this.state.id}</p>
+              <p className={this.classForStatus()}>{this.state.status}</p>
             </div>
           </div>
-        </div>
+          {this.insertGMap()}
+           <div className="row">
+            <div className="five columns offset-by-one top-bottom-padding">
+              <p className="tiny-margin"><strong>Pickup</strong></p>
+              <p className="tiny-margin"><input type="text" id="editPickupContactName" defaultValue={this.state.pickupContactName}></input></p>
+              <p className="tiny-margin"><input type="text" id="editPickupContactNumber" defaultValue={this.state.pickupContactNumber}></input></p>
+              <p className="tiny-margin">{this.state.pickupAddress}</p>
+              <p className="tiny-margin">Singapore {this.state.pickupPostalCode}</p>
+              <p className="tiny-margin">{this.state.pickupTimeDate.slice(0,10)} {this.state.pickupTimeDate.slice(11,16)}</p>
+            </div>
+             <div className="five columns top-bottom-padding">
+              <p className="tiny-margin"><strong>Dropoff</strong></p>
+              <p className="tiny-margin"><input type="text" id="editDropoffContactName" defaultValue={this.state.dropoffContactName}></input></p>
+              <p className="tiny-margin"><input type="text" id="editDropoffContactNumber" defaultValue={this.state.dropoffContactNumber}></input></p>
+              <p className="tiny-margin">{this.state.dropoffAddress}</p>
+              <p className="tiny-margin">Singapore {this.state.dropoffPostalCode}</p>
+              <p className="tiny-margin">{this.state.dropoffTimeDate.slice(0,10)} {this.state.dropoffTimeDate.slice(11,16)}</p>
+             </div>
+            </div>
+
+            <div className="row">
+              {this.acceptedByCourier()}
+             </div>
+
+             <div className="row">
+              <div className="ten columns offset-by-one text-align-center tiny-top-margin">
+                <button type="button" name="button" onClick={() => this.saveState()} >Save</button>
+                <button type="button" name="button" onClick={() => this.toggleEdit()} >Close Edit</button>
+              </div>
+             </div>
+
+
+            </div>
+
       )
     }
   }
 })
-
-
 
 var GMap = React.createClass({
   getInitialState: function () {
@@ -485,7 +345,10 @@ var GMap = React.createClass({
     google.maps.event.addListener(this.map, 'zoom_changed', ()=> this.handleZoomChange())
   },
   componentDidUpdate: function(){
+
     if (this.state.courier !== undefined){
+      this.courierMarker.setMap(null)
+      this.infoWindowForCourier.setMap(null)
       this.courierMarker = this.createCourierMarker()
       this.infoWindowForCourier = this.createInfoWindowForCourier()
     }
@@ -588,13 +451,6 @@ var GMap = React.createClass({
 function midpoint(lat1, long1, lat2, long2) {
    return {lat: (lat1 + (lat2 - lat1)), lng: (long1 + (long2 - long1))};
 }
-
-
-
-
-
-
-
 
 if(document.getElementById('clientManage') !== null){
   render(<ClientManage/>, document.getElementById('clientManage'));
