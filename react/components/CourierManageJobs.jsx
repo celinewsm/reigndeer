@@ -105,7 +105,7 @@ courierStartsPickup: function(){
       // if ( obj.state.courierCurrentLatitude != latitude && obj.state.courierCurrentLongitude != longitude){
         socket.emit('update courier position', {jobId: obj.state.id,
                                                 status: obj.state.status,
-                                                courierCurrentLatitude: latitude,
+                                              courierCurrentLatitude: latitude,
                                                 courierCurrentLongitude: longitude});
       // }
 
@@ -177,16 +177,12 @@ buttonToShow: function(){
 },
 render: function(){
       return (
-
-
-
         <div className="row white-box">
 
           <div className="row">
             <div className="ten columns offset-by-one">
               <p className="tinyfont">ID1300{this.state.id}</p>
               <p className="tiny-top-margin zero-paddings zero-margins status-font-size">{this.state.clientDetails.name} - {this.clientRating()}</p>
-
             </div>
           </div>
            <div className="row">
@@ -214,8 +210,6 @@ render: function(){
               </div>
              </div>
             </div>
-
-
       )
   }
 })

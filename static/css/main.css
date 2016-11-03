@@ -220,3 +220,13 @@ body {
 .tiny-bottom-margin{
   margin-bottom:0.5em !important
 }
+
+.white-text-white-border-button{
+  color: rgba(255,255,255,0.8);
+  border-color: rgba(255,255,255,0.8);
+}
+
+.white-text-white-border-button:hover{
+  color: white;
+  border-color: white;
+}

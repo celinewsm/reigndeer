@@ -114,7 +114,7 @@ filterByNearby: function(){
 buttonToShow: function(){
   if(!this.state.nearMeTriggered){
     if(this.state.userCurrentLatitude !== undefined){
-      return <div><button onClick={() => this.filterByNearby() }>Near Me</button></div>
+      return <div><button className="white-text-white-border-button" onClick={() => this.filterByNearby() }>Near Me</button></div>
     }
   } else {
     return <div><button onClick={() => this.previousQuery() }>View All</button></div>
@@ -131,15 +131,16 @@ previousQuery: function(){
     return (
       <div className="container">
         <div className="row text-align-center">
-          <h1 className="zero-margins">Jobs Available</h1>
-          {this.buttonToShow()}
+          <h3 className="top-margin white-font zero-bottom-margin">Jobs Available</h3>
         </div>
+        {this.buttonToShow()}
         {
           this.state.jobs.map(function(job) {
             return <Job key={job.id} job={job} acceptJob={this.acceptJob} />
           }.bind(this))
         }
       </div>
+
     );
   }
 });
@@ -161,86 +162,40 @@ clientRating: function(){
 render: function(){
       return (
         <div className="row white-box">
-        <div className="row">
-            <div className="eight columns offset-by-one">
-              <h5 className="zero-margins">JobID: 1300{this.state.id}</h5>
-              <div>Requested by: {this.state.clientDetails.name}, {this.clientRating()}</div>
-            </div>
-            <div className="two columns text-align-center">
-              <strong>${this.state.price}</strong> ({this.state.itemCategory.name})<br/>
-              <button type="button" name="button" onClick={() => this.props.acceptJob(this.state.id)} >Accept</button>
-            </div>
-          </div>
+
           <div className="row">
-          </div>
-          <div className="row">
-            <div className="five columns offset-by-one">
-              <div className="row">
-                  <p className="zero-margins"><u>Pickup</u></p>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Contact</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.pickupContactName} ({this.state.pickupContactNumber})
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Address</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.pickupAddress}, {this.state.pickupPostalCode}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Time</strong>
-                </div>
-                <div className="nine columns">
-                  <p>
-                    {this.state.pickupTimeDate.slice(0,10)}, {this.state.pickupTimeDate.slice(11,16)}
-                  </p>
-                </div>
-              </div>
-
-            </div>
-
-            <div className="five columns">
-              <p className="zero-margins"><u>Dropoff</u></p>
-              <div className="row">
-                <div className="three columns">
-                <strong>Contact</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.dropoffContactName} ({this.state.dropoffContactNumber})
-                </div>
-              </div>
-              <div className="row">
-                <div className="three columns">
-                <strong>Address</strong>
-                </div>
-                <div className="nine columns">
-                  {this.state.dropoffAddress}, {this.state.dropoffPostalCode}
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="three columns">
-                <strong>Time</strong>
-                </div>
-                <div className="nine columns">
-                    <p>
-                      {this.state.dropoffTimeDate.slice(0,10)}, {this.state.dropoffTimeDate.slice(11,16)}
-                    </p>
-                </div>
-              </div>
+            <div className="ten columns offset-by-one">
+              <p className="tinyfont">ID1300{this.state.id}</p>
+              <p className="tiny-top-margin zero-paddings zero-margins status-font-size">{this.state.clientDetails.name} - {this.clientRating()}</p>
 
             </div>
           </div>
-        </div>
+           <div className="row">
+            <div className="five columns offset-by-one top-bottom-padding">
+              <p className="tiny-margin"><strong>Pickup</strong></p>
+              <p className="tiny-margin">{this.state.pickupContactName} ({this.state.pickupContactNumber})</p>
+              <p className="tiny-margin">{this.state.pickupAddress},Singapore {this.state.pickupPostalCode}</p>
+              <p className="tiny-margin">{this.state.pickupTimeDate.slice(0,10)} {this.state.pickupTimeDate.slice(11,16)}</p>
+            </div>
+             <div className="five columns top-bottom-padding">
+              <p className="tiny-margin"><strong>Dropoff</strong></p>
+              <p className="tiny-margin">{this.state.dropoffContactName}({this.state.dropoffContactNumber})</p>
+              <p className="tiny-margin">{this.state.dropoffAddress}, Singapore {this.state.dropoffPostalCode}</p>
+              <p className="tiny-margin">{this.state.dropoffTimeDate.slice(0,10)} {this.state.dropoffTimeDate.slice(11,16)}</p>
+             </div>
+            </div>
+
+            <div className="row">
+              <strong>${this.state.price}</strong> ({this.state.itemCategory.name})
+             </div>
+
+             <div className="row">
+              <div className="ten columns offset-by-one text-align-center tiny-top-margin">
+                <button type="button" name="button" onClick={() => this.props.acceptJob(this.state.id)} >Accept</button>
+              </div>
+             </div>
+            </div>
+
       )
   }
 })
