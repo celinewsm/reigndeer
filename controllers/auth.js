@@ -68,6 +68,7 @@ router.post('/edit', function(req, res) {
   db.user.update({
     name: req.body.name,
     mobile: req.body.mobile,
+    email: req.body.email,
   }, {
     where: {
       id: req.user.id
