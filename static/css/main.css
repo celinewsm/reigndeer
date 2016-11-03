@@ -118,15 +118,10 @@ select {
 }
 
 .nav-logo{
-  width:2.5em;
-  height:2.5em;
+  height:1em;
   margin: 0;
   padding-top: 0.2em ;
   padding-left: 0.5em
-}
-
-.nav-name{
-  font-size:1.5em !important;
 }
 
 div .white-box{

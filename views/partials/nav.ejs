@@ -1,10 +1,7 @@
 <link rel="stylesheet" href="/css/nav.css">
 <nav>
   <ul class="topnav" id="myTopnav">
-    <li><a href="/">REIGNdeer</a></li>
-
-
-
+    <li><a href="/"> <img class="nav-logo" src="/images/favicon.png" alt="" /> REIGNdeer</a></li>
     <% if (currentUser) { %>
       <li><a href="/auth/logout">Logout</a></li>
       <% if (currentUser.type === "client") { %>
@@ -17,11 +14,6 @@
       <li><a href="/auth/login">Login</a></li>
       <li><a href="/auth/signup">Signup</a></li>
     <% } %>
-
-
-
-
-
     <li class="icon">
       <a href="javascript:void(0);" onclick="expandHamburger()">&#9776;</a>
     </li>
