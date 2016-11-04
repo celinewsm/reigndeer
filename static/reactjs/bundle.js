@@ -30228,7 +30228,7 @@
 	    });
 	  },
 	  createCourierMarker: function createCourierMarker() {
-	    var image = 'http://i77.photobucket.com/albums/j55/Nolamom/Fun%20gifs/Christmas%20Gifs/running_reindeer.gif~https://res.cloudinary.com/celinewsm/image/upload/v1478223068/running_reindeer_guqhwr.gif';
+	    var image = 'https://res.cloudinary.com/celinewsm/image/upload/v1478223068/running_reindeer_guqhwr.gif';
 	
 	    return new google.maps.Marker({
 	      position: this.courierPoint(),
