@@ -3,7 +3,7 @@ $("#newJobPickupPostalCode").keyup(function(){
   if(postalcode >= 100000 && postalcode <= 999999){
     $("#pickupPostalcodeValidation").empty()
     $("#pickupPostalcodeValidation").append('<span class="validation-green">OK</span>')
-    $.get("http://maps.googleapis.com/maps/api/geocode/json?address="+postalcode, function(data, status){
+    $.get("https://maps.googleapis.com/maps/api/geocode/json?address="+postalcode, function(data, status){
       if(data.status == "ZERO_RESULTS"){
         $("#pickupPostalcodeValidation").empty()
         $("#pickupPostalcodeValidation").append('<span class="validation-red">Please enter valid postal code</span>')
@@ -25,7 +25,7 @@ $("#newJobDropoffPostalCode").keyup(function(){
   if(postalcode >= 100000){
     $("#dropoffPostalcodeValidation").empty()
     $("#dropoffPostalcodeValidation").append('<span class="validation-green">OK</span>')
-    $.get("http://maps.googleapis.com/maps/api/geocode/json?address="+postalcode, function(data, status){
+    $.get("https://maps.googleapis.com/maps/api/geocode/json?address="+postalcode, function(data, status){
       if(data.status == "ZERO_RESULTS"){
         $("#dropoffPostalcodeValidation").empty()
         $("#dropoffPostalcodeValidation").append('<span class="validation-red">Please enter valid postal code</span>')
