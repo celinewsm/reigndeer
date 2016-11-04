@@ -30750,38 +30750,8 @@
 	    });
 	
 	    var obj = this;
-	
-	    function findAndSetCourierLocation() {
-	
-	      if (!navigator.geolocation) {
-	        console.log("geolocation not supported");
-	        return;
-	      } else {
-	        navigator.geolocation.getCurrentPosition(success, error);
-	      }
-	
-	      function success(position) {
-	        var latitude = position.coords.latitude;
-	        var longitude = position.coords.longitude;
-	        console.log('Courier current latitude: ' + latitude + '° Longitude: ' + longitude + '°');
-	
-	        obj.setState({
-	          courierCurrentLatitude: latitude,
-	          courierCurrentLongitude: longitude
-	        });
-	
-	        // if ( obj.state.courierCurrentLatitude != latitude && obj.state.courierCurrentLongitude != longitude){
-	        socket.emit('update courier position', { jobId: obj.state.id,
-	          status: obj.state.status,
-	          courierCurrentLatitude: latitude,
-	          courierCurrentLongitude: longitude });
-	        // }
-	      };
-	      function error() {
-	        console.log("Unable to retrieve your location");
-	      };
-	    }
-	    startTrackingCourierLocation = setInterval(findAndSetCourierLocation(), 5000);
+	    findAndSetCourierLocation(obj);
+	    startTrackingCourierLocation = setInterval(findAndSetCourierLocation(obj), 5000);
 	    // use 60000 after testing
 	  },
 	  pauseCourierActivity: function pauseCourierActivity() {
@@ -30802,12 +30772,16 @@
 	    this.setState({
 	      status: "Enroute to deliver"
 	    });
+	
+	    findAndSetCourierLocation(this);
 	  },
 	  courierCompletedDelivery: function courierCompletedDelivery() {
 	
 	    this.setState({
 	      status: "Delivered"
 	    });
+	
+	    findAndSetCourierLocation(this);
 	
 	    clearInterval(startTrackingCourierLocation);
 	  },
@@ -30995,6 +30969,37 @@
 	    );
 	  }
 	});
+	
+	var findAndSetCourierLocation = function findAndSetCourierLocation(thisObject) {
+	
+	  if (!navigator.geolocation) {
+	    console.log("geolocation not supported");
+	    return;
+	  } else {
+	    navigator.geolocation.getCurrentPosition(success, error);
+	  }
+	
+	  function success(position) {
+	    var latitude = position.coords.latitude;
+	    var longitude = position.coords.longitude;
+	    console.log('Courier current latitude: ' + latitude + '° Longitude: ' + longitude + '°');
+	
+	    thisObject.setState({
+	      courierCurrentLatitude: latitude,
+	      courierCurrentLongitude: longitude
+	    });
+	
+	    // if ( obj.state.courierCurrentLatitude != latitude && obj.state.courierCurrentLongitude != longitude){
+	    socket.emit('update courier position', { jobId: thisObject.state.id,
+	      status: thisObject.state.status,
+	      courierCurrentLatitude: latitude,
+	      courierCurrentLongitude: longitude });
+	    // }
+	  };
+	  function error() {
+	    console.log("Unable to retrieve your location");
+	  };
+	};
 	
 	if (document.getElementById('courierManageJobs') !== null) {
 	  (0, _reactDom.render)(_react2.default.createElement(CourierManageJobs, null), document.getElementById('courierManageJobs'));
