@@ -90,7 +90,9 @@ courierStartsPickup: function(){
   })
 
   var obj = this
-  startTrackingCourierLocation = setInterval(function(){
+
+  function findAndSetCourierLocation(){
+
     if (!navigator.geolocation){
       console.log("geolocation not supported");
       return;
@@ -120,8 +122,9 @@ courierStartsPickup: function(){
       console.log("Unable to retrieve your location")
     };
 
-}, 5000);
-// use 60000 after testing
+  }
+  startTrackingCourierLocation = setInterval(findAndSetCourierLocation(), 5000);
+  // use 60000 after testing
 },
 pauseCourierActivity: function(){
   this.setState({
