@@ -226,3 +226,9 @@ body {
   color: white;
   border-color: white;
 }
+
+@media (max-width: 800px) {
+  .content {
+    max-width: 100% !important
+  }
+}
