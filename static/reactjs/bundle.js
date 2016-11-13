@@ -30761,7 +30761,6 @@
 	
 	    if (startTrackingCourierLocation) {
 	      clearInterval(startTrackingCourierLocation);
-	      startTrackingCourierLocation = false;
 	    }
 	
 	    socket.emit('pause courier activity', { jobId: this.state.id,

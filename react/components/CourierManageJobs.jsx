@@ -101,7 +101,6 @@ pauseCourierActivity: function(){
 
   if(startTrackingCourierLocation){
     clearInterval(startTrackingCourierLocation)
-    startTrackingCourierLocation = false
   }
 
   socket.emit('pause courier activity', {jobId: this.state.id,
@@ -113,7 +112,7 @@ courierStartsDelivery: function(){
     this.setState({
       status: "Enroute to deliver"
     })
-    
+
     findAndSetCourierLocation(this)
 },
 courierCompletedDelivery: function(){
