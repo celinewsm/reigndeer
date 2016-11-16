@@ -22,7 +22,6 @@ var CourierManageJobs = React.createClass({
     socket.on('update courier on job update', this.clientUpdatesJob);
   },
   clientUpdatesJob: function(job){
-    console.log("does it reach here?",job)
 
     for(var i in this.state.jobs){
        if(this.state.jobs[i].id === job.id){
@@ -36,6 +35,21 @@ var CourierManageJobs = React.createClass({
        }
      }
   },
+  removeJob: function(id){
+
+    for(var i in this.state.jobs){
+       if(this.state.jobs[i].id === id){
+         var newJobs = this.state.jobs
+         newJobs.splice(i,1)
+
+         this.setState({
+           jobs: newJobs
+         })
+         break
+       }
+     }
+
+  },
   render: function () {
     return (
 
@@ -45,7 +59,7 @@ var CourierManageJobs = React.createClass({
         </div>
         {
           this.state.jobs.map(function(job) {
-            return <Job key={job.id} job={job} />
+            return <Job key={job.id} job={job} removeJob={this.removeJob} />
           }.bind(this))
         }
       </div>
@@ -117,14 +131,12 @@ courierStartsDelivery: function(){
 },
 courierCompletedDelivery: function(){
 
-  this.setState({
-    status: "Delivered"
-  })
-
-  findAndSetCourierLocation(this)
-
+  socket.emit('update courier position', {jobId: this.state.id,
+                                          status: "Delivered"});
 
   clearInterval(startTrackingCourierLocation)
+  this.props.removeJob(this.state.id)
+
 
 },
 buttonToShow: function(){
@@ -146,12 +158,6 @@ buttonToShow: function(){
         <button type="button" name="button" onClick={() => this.pauseCourierActivity()} >Pause</button>
 
       </div>
-    )
-  } else if (this.state.status === "Enroute to deliver") {
-    return (
-      <div>
-        <button type="button" name="button">Delivered</button>
-  </div>
     )
   }
 },

@@ -30667,12 +30667,25 @@
 	    socket.on('update courier on job update', this.clientUpdatesJob);
 	  },
 	  clientUpdatesJob: function clientUpdatesJob(job) {
-	    console.log("does it reach here?", job);
 	
 	    for (var i in this.state.jobs) {
 	      if (this.state.jobs[i].id === job.id) {
 	        var newJobs = this.state.jobs;
 	        newJobs[i] = job, this.setState({
+	          jobs: newJobs
+	        });
+	        break;
+	      }
+	    }
+	  },
+	  removeJob: function removeJob(id) {
+	
+	    for (var i in this.state.jobs) {
+	      if (this.state.jobs[i].id === id) {
+	        var newJobs = this.state.jobs;
+	        newJobs.splice(i, 1);
+	
+	        this.setState({
 	          jobs: newJobs
 	        });
 	        break;
@@ -30693,7 +30706,7 @@
 	        )
 	      ),
 	      this.state.jobs.map(function (job) {
-	        return _react2.default.createElement(Job, { key: job.id, job: job });
+	        return _react2.default.createElement(Job, { key: job.id, job: job, removeJob: this.removeJob });
 	      }.bind(this))
 	    );
 	  }
@@ -30776,13 +30789,11 @@
 	  },
 	  courierCompletedDelivery: function courierCompletedDelivery() {
 	
-	    this.setState({
-	      status: "Delivered"
-	    });
-	
-	    findAndSetCourierLocation(this);
+	    socket.emit('update courier position', { jobId: this.state.id,
+	      status: "Delivered" });
 	
 	    clearInterval(startTrackingCourierLocation);
+	    this.props.removeJob(this.state.id);
 	  },
 	  buttonToShow: function buttonToShow() {
 	    var _this = this;
@@ -30836,16 +30847,6 @@
 	              return _this.pauseCourierActivity();
 	            } },
 	          'Pause'
-	        )
-	      );
-	    } else if (this.state.status === "Enroute to deliver") {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'button',
-	          { type: 'button', name: 'button' },
-	          'Delivered'
 	        )
 	      );
 	    }

@@ -30,7 +30,8 @@ router.get('/manage', function (req, res) {
     where: {
       courierId: req.user.id,
       $not: {status: 'Cancelled'},
-      $not: {status: 'Delivered'},
+      $not: {status: 'Archived'},
+      // $not: {status: 'Delivered'},
      },
     order: 'id DESC',
     include: [{
