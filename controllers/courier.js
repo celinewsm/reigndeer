@@ -31,7 +31,7 @@ router.get('/manage', function (req, res) {
       courierId: req.user.id,
       $not: {status: 'Cancelled'},
       $not: {status: 'Archived'},
-      // $not: {status: 'Delivered'},
+      $not: {status: 'Delivered'},
      },
     order: 'id DESC',
     include: [{

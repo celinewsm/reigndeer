@@ -29792,7 +29792,7 @@
 	  },
 	  insertGMap: function insertGMap() {
 	    console.log("this.state.courierCurrentLatitude", this.state.courierCurrentLatitude);
-	    if (this.state.courierCurrentLatitude !== null) {
+	    if (this.state.status === "Delivered") {} else if (this.state.courierCurrentLatitude !== null) {
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'row' },

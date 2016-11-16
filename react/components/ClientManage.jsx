@@ -155,7 +155,9 @@ acceptedByCourier: function(){
 },
 insertGMap: function(){
   console.log("this.state.courierCurrentLatitude",this.state.courierCurrentLatitude)
-  if(this.state.courierCurrentLatitude !== null){
+  if (this.state.status === "Delivered"){
+  }
+  else if(this.state.courierCurrentLatitude !== null){
     return (
       <div className="row">
         <div className="ten columns offset-by-one">
